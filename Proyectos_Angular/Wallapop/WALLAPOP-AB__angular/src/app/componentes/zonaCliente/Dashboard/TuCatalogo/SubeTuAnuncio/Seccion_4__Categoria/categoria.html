@@ -1,0 +1,16 @@
+<section class='section-template'>
+    <span style='font-size:1.25rem; line-height:28px; color:#29363d; font-weight:700; margin:0'>Selecciona una categoría para tu anuncio</span>
+    <span style='font-size:0.875rem; line-height:20px; color:#5c7a89; font-weight:400; margin:0'>No te preocupes, te ayudaremos con algunas sugerencias cuando abras el desplegable</span>
+    <div class="form-floating">
+        <select class="form-select" id="floatingSelect" aria-label="Floating label select example" (change)="SeleccionarCategoria($event)">
+            <option disabled selected>Selecciona una categoría</option>
+            @if(categorias().length !== 0){
+                @for(cat of categorias();track $index)
+                {
+                    <option [value]="cat.pathCategoria">{{cat.nombreCategoria}}</option>
+                }
+            }
+        </select>
+        <label for="floatingSelect">Categoría y subcategoría</label>
+    </div>  
+</section>  

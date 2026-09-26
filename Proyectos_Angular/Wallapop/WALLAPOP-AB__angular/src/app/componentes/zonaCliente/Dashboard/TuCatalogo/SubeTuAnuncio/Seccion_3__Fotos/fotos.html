@@ -1,0 +1,37 @@
+<section class='section-template'>
+    <input type="file" #refInputFile style='display:none' accept="image/jpeg, image/png, image/webp" multiple (change)="LeerImagenes($event)" />
+    <span style='font-size:1.25rem;  line-height:28px; color:#29363d; font-weight:700;  margin:0'>Fotos</span>
+    <div class="d-flex flex-row justify-content-between gap-3" style='border: 2px dashed #5c7a89; border-radius: 16px; padding: 16px' draggable  (drop)="DropImagenes($event)" (dragover)="DragOver($event)" (click)="refInputFile.click()">
+        <button class="btn-upload-fotos" >Subir fotos</button>
+        <div class="d-flex flex-column justify-content-start align-items-start gap-1 flex-grow-1">
+            <span style='font-size:0.875rem; line-height:20px; color:#5c7a89; font-weight:400; margin:0'>Arrastra tus fotos aquí</span>
+            <span style='font-size:0.75rem; line-height:16px; color:#5c7a89; font-weight:400; margin:0'>Formatos aceptados: JPEG, PNG y WebP. Tamaño límite: 10 MB por archivo.</span>
+        </div>
+    </div>
+    <div class="d-flex flex-row flex-wrap gap-2 mt-3">
+        @for(pos of numDivFotos; track $index){
+    
+                <div  class="btn-select-image" (click)="refInputFile.click()" >
+                    <img [src]="(fotosSrc())![pos] ? fotosSrc()![pos] : '/images/dashboard/subetuanuncio/fotoDefault.png'" [alt]="'Foto ' + (pos + 1)" [ngClass]="{'imagenPreview': !!fotosSrc()![pos]}"/>
+                    @if(pos === 0 && fotosSrc()![0])
+                    {
+                        <span class="badge bg-primary" style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)'>PORTADA</span>
+                    }
+                    @if(fotosSrc()![pos])
+                    { 
+                      <button class="btn-remove-foto" (click)="RemoveImage($event,pos)">X</button>
+                    }
+                </div>
+        }
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <button class="walla-button walla-button-primary" [disabled]="!fotosSrc() || fotosSrc()!.length === 0" (click)="showCategoriasEvent.emit(true)">Continuar</button>
+            </div>
+        </div>
+    </div>                
+
+
+</section>

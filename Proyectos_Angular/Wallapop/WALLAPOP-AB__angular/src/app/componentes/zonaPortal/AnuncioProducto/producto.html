@@ -1,0 +1,98 @@
+        <div class="container">
+            @if(producto())
+            {                    
+                <div class="row m-2">    
+                    <div class="col-md-8">
+                        @if(producto()!.fotos && producto()!.fotos!.length > 0) {
+                            <div id="carouselExampleIndicators" class="carousel carousel-dark slide">
+                                <div class="carousel-indicators">
+                                    @for(foto of producto()!.fotos; track $index)
+                                    {
+                                        <button type="button"
+                                                data-bs-target="#carouselExampleIndicators" 
+                                                data-bs-slide-to=`${$index}` 
+                                                [ngClass]="{ 'active': $index === 0 }" 
+                                                [aria-current]="{ 'true': $index === 0, 'false': $index !== 0 }" 
+                                                [aria-label]="`Slide  ${$index + 1 }`">
+                                        </button>
+                                    }
+                                </div>
+                                <div class="carousel-inner">
+                                    @for(foto of producto()!.fotos; track $index)
+                                    {
+                                            <div  [ngClass]="{ 'carousel-item': true, 'active': $index === 0 }">
+                                                <img [src]="foto.data" class="d-block flex-fill w-50 h-50 rounded "  [alt]="foto.originalname" />
+                                            </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>                        
+                        }
+                        @else {
+                            <p>No hay fotos disponibles</p>                        
+                        }
+    
+                    </div>
+    
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{producto()!.titulo}}</h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary">{{producto()!.estado}}</h6>
+                                <p class="card-text"><strong>{{producto()!.precio}} €</strong></p>
+                                <div class="d-flex flex-column gap-2">
+                                    <button class="walla-button walla-button-primary">Comprar</button>
+                                    <button class="walla-button walla-button-secondary">Hacer oferta</button>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                    <img src="/images/inicio/empty-image.png" class="avatar-vendedor" alt="..."/>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-row justify-content-between">
+                                            <h5 class="card-title">Nombre vendedor</h5>
+                                            <button type="button" class="btn-chat" (click)="CrearNuevoChat()">Chat</button>
+                                        </div>
+                                        <p class="card-text">
+                                            @for(star of stars; track $index)
+                                            {                                            
+                                                    <i [id]="star" class="fa-solid fa-star" style='color: #000'></i>
+                                            }
+                                            <strong>5</strong>
+                                            <span class="text-body-secondary">(100)</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+    
+                <div class="row m-2">
+                    <div class="col">
+                        <h5>Descripción</h5>
+                        <p>{{producto()!.descripcion}}</p>
+                        <hr />
+                        <h5>Estado</h5>
+                        <p>{{producto()!.estado}}</p>
+                    </div>
+                </div>
+            }
+            @else
+            {
+                <p>Cargando producto...</p>
+            }  
+        </div>

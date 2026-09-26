@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="row mb-4">
+        @if(! cliente()){
+            <div class="d-flex flex-row justify-content-center align-items-center m-3" style="background-color: rgb(233, 255, 180)">
+                <div class="d-flex flex-column justify-content-center align-items-center m-5">
+                    <div class="m-2" style="color: #015354;"><h1><strong>Compra y vende productos</strong> de segunda mano</h1></div>
+                    <button class="btn btn-vender" (click)="this.router.navigateByUrl('/Cliente/Dashboard/TuCatalogo/upload')"><i class="fa-solid fa-circle-plus"></i> Vender ahora</button>
+                </div>
+                <img src="/images/inicio/portada.png" class="img-inicio" alt="Imagen de portada" (click)="this.router.navigateByUrl('/Cliente/Dashboard/TuCatalogo/upload')">
+            </div>
+        }
+        @else {
+            <div class="d-flex flex-column justify-content-center align-items-center m-3" >
+                <h1><strong>Compra y vende cosas de segunda mano</strong></h1>
+                <h2>casi, casi, sin moverte del sofá</h2>
+                <div class="d-flex flex-row align-items-center m-3 gap-4 w-100">
+                     <input type="search" class="form-control search-box" placeholder="Buscar en Wallapop"  />
+                     <button class="walla-button walla-button-primary">Buscar</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        @if(! cliente()){
+            <h1>A mucha gente le gustan</h1>
+            <!-- listado de productos clientes con mas visitas o likes si no has iniciado sesion...-->
+            <p> ... aqui irian los productos de clientes con mas visitas o likes...</p>
+        }
+        @else{
+            <h1> Sigue donde lo dejaste</h1>
+            <!-- listado de productos que has visto/buscados recientemente ...-->
+             <div class="d-flex flex-row justify-content-start align-items-center m-3 gap-4">
+                    
+                <app-prods-last-search></app-prods-last-search>
+                <app-prods-viewed-recent></app-prods-viewed-recent>
+
+            </div>
+
+            <hr>
+            <app-prods-elegidos-user [productosQueTeInteresan]="productosQueTeInteresan()" [clienteNombre]="cliente()!.nombreCompleto"></app-prods-elegidos-user>
+
+        }
+    </div>
+
+    <div class="row">
+        <div class="d-flex flex-row justify-content-center align-items-center m-3">
+            <img src="/images/inicio/wallapop-pro.png"  alt="Wallapop Pro" (click)="this.router.navigateByUrl('/Portal/Inicio')" style="cursor: pointer;">
+            <img src="/images/inicio/qr-app.png"  alt="App wallapop" >
+        </div>
+    </div>
+</div>

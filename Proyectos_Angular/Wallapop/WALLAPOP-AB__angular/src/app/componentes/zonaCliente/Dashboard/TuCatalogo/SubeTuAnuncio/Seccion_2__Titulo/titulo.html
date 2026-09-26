@@ -1,0 +1,20 @@
+<section class='section-template'>
+    <span style='font-size:1.25rem; line-height:28px; color:#29363d; font-weight:700 ; margin:0'>Información del producto</span>
+    <span style='font-size:0.875rem; line-height:20px; color:#5c7a89; font-weight:400; margin:0'>¿Qué vendes? Proporciona toda la información relevante</span>
+    <div class="form-floating">
+        <input type="text" maxLength='50' class="form-control" id="floatingInput" placeholder="Resumen del producto" (input)="anuncioChanged.emit({titulo: $event.target.value})" />
+        <label for="floatingInput">Resumen del producto</label>
+    </div>
+    <div class="d-flex flex-row justify-content-between">
+        <span style='font-size:0.75rem; line-height:16px; color:#5c7a89; padding-left:16px; padding-right:16px; flex-grow:1'>Ejemplo: Sofá de dos plazas de cuero rojo, marca Cozy. Buen estado.</span>
+        <span style='font-size:0.75rem; line-height:16px; color:#5c7a89; padding-left:16px; padding-right:16px; flex-grow:1'>0/50</span>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <button class="walla-button walla-button-primary" [disabled]="!titulo() || titulo().length === 0" (click)="showFotosEvent.emit(true)" >Continuar</button>
+            </div>
+        </div>
+    </div>
+</section>

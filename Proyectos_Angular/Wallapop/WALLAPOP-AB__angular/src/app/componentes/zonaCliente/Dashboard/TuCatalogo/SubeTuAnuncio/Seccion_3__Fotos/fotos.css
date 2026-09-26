@@ -1,0 +1,62 @@
+.imagenPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+.btn-upload-fotos {
+    background-color: transparent;
+    border: 2px solid rgb(61, 210, 186); 
+    cursor: pointer;
+    font-family: WallieChunky;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 20px;
+    color: rgb(41, 54, 61);
+    padding: 0px 16px;
+    min-height: 32px;
+    min-width: 64px;
+    align-items: center;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+}
+.btn-select-image {
+    width: 124px;
+    height: 124px;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #a3b8c1;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.btn-select-image:hover {
+    border-color: #3dd2ba;
+    cursor: pointer;
+}
+
+.btn-remove-foto {
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 1px 4px #25323814, 0 2px 6px #25323814;
+    border-radius: 100px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    line-height: 20px;
+    position: absolute;
+    right: 8px;
+    text-align: center;
+    top: 8px;
+    z-index: 1;
+}

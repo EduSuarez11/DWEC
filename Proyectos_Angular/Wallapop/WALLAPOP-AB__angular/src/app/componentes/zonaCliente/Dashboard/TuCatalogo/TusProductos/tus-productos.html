@@ -1,0 +1,22 @@
+<div class='container-fluid'>
+    <div class="row">
+        <h2>Tus Productos</h2>
+        <p>Aquí podrás subir productos, gestionar los que ya tienes y destacarlos para venderlos antes.</p>
+    </div>
+    <div class="row mt-3">
+        @if(cliente())
+        {
+            @if(cliente()!.productosVenta && cliente()!.productosVenta.length > 0)
+            {            
+            <div class="d-flex flex-column gap-3">
+                    @for(producto of cliente()!.productosVenta; track $index){
+                        <app-miniprodanuncio [producto]="producto" />
+                    }
+            </div>
+            }
+            @else {
+                <p>No tienes productos en venta.</p>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.btn-selected-items {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 2px #015354;
+    border-radius: 66px;
+    background-color: #13c1ac33;
+    height: 40px;
+    width: 100%;
+    font-family: WallieChunky;
+    font-size: 1rem;
+    line-height: 24px;
+    color: #015354;
+}

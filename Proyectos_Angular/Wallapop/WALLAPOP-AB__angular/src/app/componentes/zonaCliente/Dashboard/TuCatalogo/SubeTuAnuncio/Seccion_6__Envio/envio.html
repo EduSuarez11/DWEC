@@ -1,0 +1,39 @@
+<section class="section-template">
+    <span style='font-size:1.25rem; line-height:28px; color:#29363d; font-weight:700; margin:0'>Opciones de envío</span>
+    <img src="/images/dashboard/subetuanuncio/opcionesEnvio.png" style='width:70%; height:auto' alt="Opciones de envío" />
+    <hr/>
+    <div class="form-check form-switch form-check-reverse">
+        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" defaultChecked (change)="toggleEnvio()"/>
+        <label class="form-check-label" htmlFor="switchCheckChecked">Activar envío</label>
+    </div>            
+    <hr/>
+    @if(conEnvio())
+    {
+        
+            <div class="d-flex flex-column gap-3">
+                <span style='font-size:0.875rem; line-height:20px; color:#29363d; font-weight:700; margin:0'>¿Cuánto pesa?</span>
+                <span style='font-size:0.75rem; line-height:16px; color:#5c7a89; font-weight:400; margin:0'>Elige el tramo de peso correspondiente a tu producto. Ten en cuenta el peso añadido del envoltorio.</span>
+                @for(option of 
+                    [
+                        { value: 'menos-1kg', label: 'Menos de 1 kg' },
+                        { value: 'entre-1y2kg', label: 'Entre 1 kg y 2 kg' },
+                        { value: 'entre-2y5kg', label: 'Entre 2 kg y 5 kg' },
+                        { value: 'entre-5y10kg', label: 'Entre 5 kg y 10 kg' },
+                        { value: 'entre-10y20kg', label: 'Entre 10 kg y 20 kg' },
+                        { value: 'entre-20y30kg', label: 'Entre 20 kg y 30 kg' },
+                    ]; track $index)
+                    {
+                        <ng-container>
+                            <hr/>
+                            <div key={option.value} class="form-check ">
+                                <input class="form-check-input" type="radio" name="pesoEnvio" [id]="option.value" [value]="option.value" (change)="anuncioChanged.emit({ pesoEnvio: option.value })"/>
+                                <label class="form-check-label" [for]="option.value">
+                                    {{option.label}}
+                                </label>
+                            </div>
+                        </ng-container>
+                    }
+            </div>
+        
+    }
+</section>

@@ -1,0 +1,21 @@
+.avatar-vendedor {
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    object-fit: cover;
+    /* overflow-clip-margin: content-box;
+    overflow: clip; */
+}
+.btn-chat {
+    font-size: 0.875rem;
+    line-height: 20px;
+    color: rgb(41, 54, 61);
+    padding: 0px 16px;
+    min-height: 32px;
+    align-items: center;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  
+}

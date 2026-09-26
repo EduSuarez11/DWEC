@@ -1,0 +1,22 @@
+<h1>Elegidos para {{ clienteNombre() }}</h1>
+<div class="d-flex flex-row justify-content-start align-items-center m-3 gap-4">
+    <!-- Aqui irian los productos elegidos para el cliente -->
+        @for(prod of productosQueTeInteresan(); track $index){
+        <div class="d-flex flex-column justify-content-start align-items-center m-1 gap-2" style=" cursor: pointer; width: 250px;">
+            
+            <div style="height: 304px; width: 100%; position: relative; overflow: hidden; border-radius: 16px;">
+                <img [src]="prod.fotoPortada" alt="producto-elegido-{{ $index }}" class="img-fluid rounded" style="height: 304px; width: 100%;"  (click)="this.router.navigate(['/Portal/Producto', prod.idCliente, prod._id])">
+                <div class="d-flex flex-row justify-content-between align-items-center bottom-0 start-0 end-0 position-absolute p-2">
+                    <span style="color: #29363d; font-size: 0.875rem; line-height: 20px; font-weight: 600; background-color: #fff; padding-inline: 12px; border-radius: 50rem; border: 1px solid #d1dbe0;">{{ prod.precio }} €</span>
+                    <button type="button" class="btn-heart-miniproducto"><i class="fa-regular fa-heart"></i></button>
+                </div>
+            </div>
+            <span style="color: #29363d; font-size: 0.875rem; line-height: 20px; font-weight: 500; padding-right: .25rem; padding-left: .25rem; overflow: hidden; text-overflow: ellipsis;">{{ prod.titulo }}</span>
+        </div>
+
+    }
+        @empty{
+        <p> ... aqui irian los productos elegidos para el cliente...</p>
+        }
+</div>
+

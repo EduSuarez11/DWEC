@@ -1,0 +1,82 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <h2>Bandeja de entrada</h2>
+            <hr>
+             <ul class="list-group list-group-flush">
+                 @for(chat of this.cliente()!.misChats; track $index){
+                      <li  class="list-group-item" style="cursor:'pointer'" (click)="SeleccionarChat(chat)">
+                        <!-- card con miniatura del producto y ultimo mensaje del chat sobre el mismo-->
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img [src]="chat.anuncioProducto.fotoPortada" class="img-fluid rounded" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-row justify-content-between">
+                                            @if(chat.mensajes.length > 0){
+                                            <p class="card-text"><small class="text-body-secondary">{{chat.mensajes[chat.mensajes.length-1].idEmisor===cliente()!._id ? 'Tú' : chat.datosVendedor.nombreCompleto}}</small></p>
+                                            <p class="card-text"><small class="text-body-secondary">{{chat.mensajes[chat.mensajes.length-1].timestamp | date:'short'}}</small></p>
+                                            }
+                                        </div>
+                                        <p class="card-text"><strong>{{chat.anuncioProducto.titulo}}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </li>
+                 }
+                 @empty{
+                    <li class="list-group-item"> No tienes chats abiertos</li>
+                 }
+             </ul>
+        </div>
+
+        <div class="col-6">
+            <!-- aquie se mostrarian mensajes del chat seleccionado, con un input para escribir nuevos mensajes -->
+            <div class="border rounded-3 p-3" style="height: 600px; overflow-y: auto;">
+                @if(chatSeleccionado() && chatSeleccionado()!.mensajes.length > 0) {
+                    @for(mensaje of chatSeleccionado()!.mensajes; track $index){
+                        <div class="d-flex flex-column mb-2" [ngClass]="{'align-items-end': mensaje.idEmisor === cliente()!._id, 'align-items-start': mensaje.idEmisor !== cliente()!._id}">
+                            <div class="p-2 rounded" [ngClass]="{'bg-primary text-white': mensaje.idEmisor === cliente()!._id, 'bg-light text-dark': mensaje.idEmisor !== cliente()!._id, 'max-width': '70%'}">
+                                <p class="card-text mb-1">{{mensaje.contenido}}</p>
+                                <p class="card-text">
+                                    <small class="text-body-secondary">{{mensaje.timestamp | date:'short'}}</small>
+                                    <span [ngStyle]="{ 'color': mensaje.checked ? 'green' : 'gray' }">✓✓</span>
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+                @else {
+                    <p class="text-center text-body-secondary">No hay mensajes en este chat.</p>
+                }
+            </div>
+            
+            <div class="input-group mt-3">
+                <input  type="text" class="form-control txt-mensaje" placeholder="Escribe tu mensaje..." [value]="textoMensaje()" (input)= "textoMensaje.set($event.target.value)" />
+                <button class="btn-send-mensaje" (click)="EnviarMensaje()"><i class="fa-solid fa-paper-plane" ></i></button>
+            </div>  
+
+        </div>
+
+        <div class="col-3">
+            @if(chatSeleccionado()){
+                <div class="card">
+                    <img [src]="chatSeleccionado()!.anuncioProducto.fotoPortada" class="card-img-top rounded" alt="..." />
+                    <div class="card-body">
+                        <h6>{{chatSeleccionado()!.anuncioProducto.titulo}}</h6>
+                        <div class="d-flex flex-row justify-content-between">
+                            <p class="card-text"><small class="text-body-secondary">{{chatSeleccionado()!.anuncioProducto.precio}} €</small></p>
+                            <div class="d-flex flex-row gap-2">
+                                <small class="text-body-secondary"><i class="fas fa-eye"></i> {{chatSeleccionado()!.anuncioProducto.visitas}}</small>
+                                <small class="text-body-secondary"><i class="fas fa-heart"></i> {{chatSeleccionado()!.anuncioProducto.likes}}</small>
+                            </div>                                        
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

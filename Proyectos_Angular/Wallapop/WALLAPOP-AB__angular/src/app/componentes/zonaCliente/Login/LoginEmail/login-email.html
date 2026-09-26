@@ -1,0 +1,41 @@
+        <div class="container mt-4">
+            <div class="row d-flex flex-row justify-content-center align-items-center">
+                <div class="col col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">!Te damos la bienvenida!</h5>
+
+                            <!-- .... mensajes de error mandados por el server tras el login.... -->
+                            <div id="errores-login" class="mb-3"></div>
+
+                            <!--
+                                no pongo el evento "change" pq El evento change se dispara para elementos <input>, <select>, y <textarea> cuando una alteración al valor de un elemento es confirmada por el usuario, es decir,
+                                cuando el elemento pierde el foco después de que su valor ha sido modificado. (si pones un console log dentro del evento change, verás que no se dispara por cada alteración al valor value del elemento, sino solo cuando el elemento pierde el foco después de una modificación)
+                                https://developer.mozilla.org/es/docs/Web/API/HTMLElement/change_event
+                                A diferencia del evento input, el evento change no es disparado necesariamente por cada alteración al valor value del elemento
+                            -->
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" name="email"placeholder="Dirección de email" [value]="formData().email" (input)="ChangeInput($event)"/>
+                                <label htmlFor="email">Dirección de email</label>
+                            </div>
+
+
+
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" [value]="formData().password" (input)="ChangeInput($event)"/>
+                                <label htmlFor="password">Contraseña</label>
+                            </div>
+
+                            <!-- contenedor para el reCAPTCHA, creamos una referencia con una variable TEMPLATE para q sea accesible desde el codigo del componente -->
+                            <div id="recaptcha-login"  #divCaptcha class="m-4"></div>
+
+                            <a href="/Cliente/PasswordRecovery" class="m-4 d-flex flex-row justify-content-center align-items-center"><strong>¿Has olvidado tu contraseña?</strong></a>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button class="walla-button walla-button-primary" type="button" (click)="SubmitLoginEmail()">Acceder a Wallapop</button>
+                            </div>                  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -1,0 +1,87 @@
+
+<div class="container mt-4 mb-4">
+    <!-- fila para logo y botones de inicio sesion, favoritos, etc... -->
+    <div class="row">
+         <div [ngClass]="{ 'col d-flex': true, 'flex-column justify-content-start align-items-start': estoyEnLoginRegistro(), 'flex-row justify-content-between align-items-center': !estoyEnLoginRegistro() }">
+            <img src="/images/logo-wallapop-home-v2.svg" alt="Logo" class="img-fluid" (click)="this.router.navigate(['/'])" style="cursor:pointer" />
+
+            <!-- esto tengo q ocultarlo del header si estoy en ruta de tipo /Cliente/Login... o /Cliente/Registro... -->
+             @if(! estoyEnLoginRegistro()){
+                @if(! cliente()){
+                    <input type="search" class="form-control search-box w-50" placeholder="Buscar en Wallapop" style="max-width: 400px;" />
+                }
+                <div class="d-flex flex-row gap-3">
+                    @if( cliente())
+                    {
+                    <div class="d-flex flex-row gap-3 align-items-center">
+                        <button class="btn btn-sm btn-light"><img src="/images/dashboard/layout/favoritos.png" style="width: '32px'; height: '32px'" alt="Favoritos"/> Favoritos</button>
+                        <button class="btn btn-sm btn-light" (click)="GotoBuzon()">
+                            <img src="/images/dashboard/layout/buzon.png" style="width: '32px'; height: '32px'" alt="Buzón"/> Buzón
+                            @if(this.tienesNuevosMensajes()){
+                                <span class="badge bg-danger" style="top: 0; right: 0; transform: translate(50%,-50%);">1</span>
+                            }
+                        </button>
+                        <div class="d-flex flex-column justify-content-center align-items-center">
+                            <button class="btn btn-sm btn-light" (click)="this.router.navigateByUrl('/Cliente/Dashboard/TuCatalogo/published')">
+                                <img [src]="cliente()!.cuenta.imagenAvatar || '/images/dashboard/layout/perfil.png'" 
+                                    style="width: 32px; height: 32px; border-radius: 50%; background-position: center; background-size: cover" alt="Perfil"/>
+                                <span style="font-size:0.75rem"> Tu Perfil</span>
+                            </button>
+                            <button class="btn btn-sm btn-link" (click)="this.storageService.ClearStorage(); this.router.navigateByUrl('/');">Logout</button>
+                        </div>
+                    </div> 
+                    }    
+                    @else
+                    { 
+                    <button class="walla-button walla-button-secondary" (click)="this.router.navigate(['/Cliente/Login'])">Regístrate o Inicia sesión</button>
+                    }
+                    <button class="walla-button walla-button-primary" (click)="this.router.navigateByUrl('/Cliente/Dashboard/TuCatalogo/upload')">Vender</button>
+                </div>                        
+
+             }
+             @else {
+                <hr style="width: 100%; margin-top:'1rem'; margin-bottom: '1rem';"/>
+             }
+        </div>
+
+        @if(! estoyEnLoginRegistro())
+        { 
+            <div class="row border-top border-bottom m-3"> 
+                <div class="col d-flex flex-row justify-content-start align-items-center gap-3"> 
+                    <nav class="navbar ">
+                        
+                        <ul class="navbar-nav d-flex flex-row gap-3">
+                            <!--  offCanvas del navbar para desplegar todas las categorias... -->
+                            <li class="nav-item"><button class="nav-link btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i class="fa-solid fa-bars"></i>  Todas las categorias </button> </li>
+
+                            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Todas las categorias</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body">
+                                    <div class="list-group list-group-flush -2">
+                                        @for( categoria of categorias.value(); track $index)
+                                        {
+                                                <button key={categoria.pathCategoria} class="list-group-item list-group-item-action"> {{categoria.nombreCategoria}} </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            @for( categoria of categorias.value()!.slice(0,5); track $index)
+                            {
+                                <!-- Mostramos solo las primeras 5 categorias en el navbar, el resto se pueden ver en el offCanvas -->
+                                <li key={categoria.pathCategoria} class="nav-item"> 
+                                    <button class="nav-link btn btn-link"> {{categoria.nombreCategoria}} </button> 
+                                </li> 
+                            } 
+                        </ul>
+                    </nav>
+                </div>
+            </div> 
+        }    
+
+    </div>
+
+</div>

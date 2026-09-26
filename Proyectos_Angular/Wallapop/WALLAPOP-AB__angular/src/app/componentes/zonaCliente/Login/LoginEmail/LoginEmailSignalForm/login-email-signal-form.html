@@ -1,0 +1,99 @@
+        <div class="container mt-4">
+            <div class="row d-flex flex-row justify-content-center align-items-center">
+                <div class="col col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- 
+                                con tag <form> usamos directiva formRoot para usar el parametro options de la funcion "form" y controlar el submit del mismo sin necesidad de interceptar evento (submit) del formulario
+                            -->
+                            <form [formRoot]="loginForm">                            
+                            <h5 class="card-title">!Te damos la bienvenida!</h5>
+
+                            <!-- .... mensajes de error mandados por el server tras el login.... -->
+                            <div id="errores-login" class="mb-3"></div>
+
+
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" placeholder="Dirección de email" [formField]="loginForm.email" />
+                                <label htmlFor="email">Dirección de email</label>
+                            </div>
+                            <!-- mensajes de validacion para el campo email -->
+                            @if( ! loginForm.email().valid() && loginForm.email().touched() )
+                            {
+                                <div class="d-flex flex-column justify-content-start m-2">
+                                    @if( loginForm.email().errors().filter( error => error.kind ==='required').length > 0 ) { <span class="text-danger">{{loginForm.email().errors().filter( error => error.kind ==='required')[0].message }}</span> }
+                                    @if( loginForm.email().errors().filter( error => error.kind ==='email').length > 0 ) { <span class="text-danger">{{loginForm.email().errors().filter( error => error.kind ==='email')[0].message }}</span> }
+                                    @if( loginForm.email().errors().filter( error => error.kind ==='EmailExiste').length > 0 ) { <span class="text-danger">{{loginForm.email().errors().filter( error => error.kind ==='EmailExiste')[0].message }}</span> }
+                                    @if( loginForm.email().errors().filter( error => error.kind ==='serverErrorEmailExiste').length > 0 ) { <span class="text-danger">{{loginForm.email().errors().filter( error => error.kind ==='serverErrorEmailExiste')[0].message }}</span> }
+                                </div>
+                            }
+                            @if( loginForm.email().pending() )
+                            {
+                                <div class='d-flex flex-row justify-content-start align-items-center m-2'>
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span class="ms-2 text-info">Comprobando email...</span>
+                                </div>
+                            }
+                            <!-- --------------------------------------------- -->
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="password"  placeholder="Contraseña" [formField]="loginForm.password" />
+                                <label htmlFor="password">Contraseña</label>
+                            </div>
+                            <!-- mensajes de validacion para el campo password -->
+                             @if( ! loginForm.password().valid() && loginForm.password().touched() ){
+                                <div class="d-flex flex-column justify-content-start m-2">
+                                    @if( loginForm.password().errors().filter( error => error.kind ==='required').length > 0 ){
+                                         <span class="text-danger">{{loginForm.password().errors().filter( error => error.kind ==='required')[0].message }}</span>
+                                    }@else {
+                                        @if( loginForm.password().errors().filter( error => error.kind==='errorFortaleza').length > 0 ) {
+                                            <span class="text-danger">
+                                                @let mensaje=loginForm.password().errors().filter( error => error.kind ==='errorFortaleza')[0].message;
+                                                @for(trozo of mensaje!.split('|'); track $index) {
+                                                    <span>{{trozo}}</span><br/>
+                                                }
+                                            </span>
+                                        }   
+                                    }
+
+                                </div>
+                             }
+                            <!-- @if( ! loginForm.password().valid() && loginForm.password().touched() )
+                            {
+                                <div class="d-flex flex-column justify-content-start m-2">
+                                    @if( loginForm.password().errors().filter( error => error.kind ==='required').length > 0 ) 
+                                    { <span class="text-danger">{{loginForm.password().errors().filter( error => error.kind ==='required')[0].message }}</span> }
+                                    @else {
+                                        @if( loginForm.password().errors().filter( error => error.kind ==='minLength').length > 0 ) { <span class="text-danger">❌ {{loginForm.password().errors().filter( error => error.kind ==='minLength')[0].message }}</span> }
+                                      
+                                        @for( er of ["digito","minuscula","MAYS","simbolo"]; track $index ) { 
+                                            @if( loginForm.password().errors().filter( error => error.kind ==='pattern').map( error => error.message).find(mensaje => mensaje?.includes(er)) ) { 
+                                                @let errorMessage=loginForm.password().errors().filter( error => error.kind ==='pattern').map( error => error.message)[0];
+                                                <span class="text-danger">❌ {{errorMessage}}</span> 
+                                            } 
+                                            @else { 
+                                                <span class="text-success">✅ la contraseña contiene al menos un{{er}}</span> 
+                                            } 
+                                        }                                        
+                                    }
+                                </div>
+                            }
+                             -->
+
+
+                            <!-- --------------------------------------------- -->
+                            <div id="recaptcha-login" #divCaptcha class="m-4"></div>
+
+                            <a href="/Cliente/PasswordRecovery" class="m-4 d-flex flex-row justify-content-center align-items-center"><strong>¿Has olvidado tu contraseña?</strong></a>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <!-- <button class="walla-button walla-button-primary" type="button" (click)="SubmitLogin2()" [disabled]="! loginForm().valid()">Acceder a Wallapop</button> -->
+                                <button class="walla-button walla-button-primary" type="button" (click)="SubmitLogin()">Acceder a Wallapop</button>
+                            </div>                  
+                            </form >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

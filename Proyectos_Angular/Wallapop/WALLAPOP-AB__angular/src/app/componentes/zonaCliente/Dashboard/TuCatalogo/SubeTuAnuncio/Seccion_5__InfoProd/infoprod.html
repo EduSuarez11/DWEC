@@ -1,0 +1,46 @@
+<section class="section-template">
+    <span style='font-size:1.25rem; line-height:28px; color:#29363d; font-weight:700; margin:0'>Información del producto</span>
+    <div class="d-flex flex-column gap-3">
+        <div class="form-floating">
+            <input type="text" maxLength={50} class="form-control" id="titulo" [value]="infoProd()?.titulo" (input)="OnChanged($event)" />
+            <label for="titulo">Titulo*</label>
+        </div>                
+        <div class="form-floating">
+            <textarea id="descripcion" class="form-control" style='min-height: 100px' maxLength='640' wrap="soft" rows="4" placeholder="Descripción del producto" [value]="infoProd()?.descripcion" (input)="OnChanged($event)"></textarea>
+            <label for="descripcion">Descripción*</label>
+        </div>
+        <div class="d-flex d-row justify-content-between aling-items-center gap-3">
+            <div class="form-floating">
+                <select class="form-select" id="estado" [value]="infoProd()?.estado" (change)="OnChanged($event)">
+
+                    <option value="" disabled selected>Selecciona un estado</option>
+                    @for(option of
+                        [
+                            { value: 'nuevo', label: 'Nuevo (Nunca se ha usado)' },
+                            { value: 'como-nuevo', label: 'Como nuevo (En perfectas condiciones)' },
+                            { value: 'en-buen-estado', label: 'En buen estado (Bastante usado, pero bien conservado)' },
+                            { value: 'en-condiciones-aceptables', label: 'En condiciones aceptables (Con evidentes signos de desgaste)' },
+                            { value: 'lo-ha-dado-todo', label: 'Lo ha dado todo (Puede tener defectos y toque repararlo)' },
+                        ]; track $index)
+                        {
+
+                            <option  [value]="option.value">
+                                {{option.label}}
+                            </option>
+                        
+                    }
+                </select>
+                <label for="estado">Estado*</label>
+            </div>
+            <div class="form-floating">
+                <input type="number" class="form-control" id="precio" placeholder="Precio*" (change)="OnChanged($event)"/>
+                <label for="precio">Precio*</label>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex d-row justify-content-start">
+        <img src="/images/dashboard/subetuanuncio/candado.png" alt="Información adicional" style='width:24px; height:24px'/>
+        <span style='font-size:0.875rem; line-height:20px; color:#a3b8c1; padding-left:16px; padding-right:16px'>Añadir más unidades.</span>
+        <a href="#" style='font-size:0.875rem; font-weight:700; line-height:20px; color:#038673'>Saber más</a>
+    </div>
+</section>

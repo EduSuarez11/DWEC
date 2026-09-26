@@ -1,0 +1,23 @@
+        <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+            <h2>Sube tu anuncio</h2>
+            <app-tipo-anuncio  />
+           
+            <app-titulo [titulo]="nuevoAnuncio().titulo" (anuncioChanged)="UpdateAnuncio($event)" (showFotosEvent)="OnShowFotosEvent($event)" />  
+            @if(showSeccionFotos()){
+                    <app-fotos [fotos]="nuevoAnuncio().fotos" (anuncioChanged)="UpdateAnuncio($event)" (showCategoriasEvent)="OnShowCategoriasEvent($event)"/> 
+                    
+                    @if(showSeccionCategorias()){
+                            <app-categoria (anuncioChanged)="UpdateAnuncio($event)" (showInfoProdEvent)="OnShowInfoProdEvent($event)"/>    
+                            
+                        @if(showSeccionInfoProd()){
+                                <app-infoprod [infoProd]="infoProd()" (anuncioChanged)="UpdateAnuncio($event)"/> 
+                                <app-envio  [pesoEnvio]="nuevoAnuncio().pesoEnvio" (anuncioChanged)="UpdateAnuncio($event)"/>
+                                <section class="section-template" style="border: 'none'">
+                                        <span style='font-size:0.875rem;  line-height:20px;  color:#5c7a89; font-weight:400; margin: 0'>Revisa toda la información antes de publicar tu anuncio.</span>
+                                        <button class="walla-button walla-button-primary" (click)="SubmitAnuncio()" >Subir Producto</button>
+                                </section>
+                        }
+                    }
+            } 
+            
+        </div>

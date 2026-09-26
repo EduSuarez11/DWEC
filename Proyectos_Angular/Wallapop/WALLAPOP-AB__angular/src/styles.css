@@ -1,0 +1,69 @@
+/* You can add global styles to this file, and also import other style files */
+.walla-button {
+    font-size: 1rem;
+    line-height: 24px;
+    color: #29363d;
+    align-items: center;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    padding: 0px 24px;
+    min-height: 40px;
+}
+
+button[disabled], button[disabled]:hover {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.walla-button-primary {
+    background-color: #3dd2ba;
+    border: 2px solid #3dd2ba;
+}
+.walla-button-secondary {
+    min-width: 88px;
+    background-color: transparent;
+    border: 2px solid #3dd2ba;
+}
+
+.walla-button-primary:hover, .walla-button-secondary:hover {
+    background-color: #3dd2ba;
+    border: 2px solid #3dd2ba;
+    color: white;
+    opacity: 0.8;
+}
+
+.btn-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    list-style-type: none;
+    height: 112px;
+    border-radius: 16px;
+    border: 2px solid #3dd2ba;
+    background-color: #fff;
+}
+
+.section-template {
+    background-color: #fff;
+    border-radius: 16px;
+    border: 1px solid #d1dbe0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px 16px;
+    margin-bottom: 16px;
+    width: 700px; 
+}
+
+.span-titles {
+    font-family: WallieChunky;
+    font-size: .75rem;
+    line-height: 16px;
+    display: flex;
+    place-self: center center;
+    width: max-content;
+    font-weight: 700;
+    margin-top: 20px;
+    color: rgb(1, 83, 84);
+}

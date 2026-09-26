@@ -1,7 +1,9 @@
-# Proyectos React + Vite y Node.js y Angular con TypeScript | MongoDB
+# Proyectos React + Vite y Node.js y Angular con TypeScript / MongoDB
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" width="200" />
-<img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Angular_gradient_logo.png?utm_source=es.wikipedia.org&utm_campaign=imageinfo&utm_content=original" width="180" />
+<div align="center">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" width="180" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Angular_gradient_logo.png?utm_source=es.wikipedia.org&utm_campaign=imageinfo&utm_content=original" width="180" />
+</div>
 
 --- 
 

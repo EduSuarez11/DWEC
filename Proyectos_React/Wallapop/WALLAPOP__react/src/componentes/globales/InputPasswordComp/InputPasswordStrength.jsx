@@ -1,0 +1,1 @@
+//componente q recibe como propiedades el valor de la "contraseña" a validar (parametros de fortaleza)

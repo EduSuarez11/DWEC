@@ -1,0 +1,90 @@
+.secciones {
+    background-color: #fff;
+    border-radius: 16px;
+    border: 1px solid #d1dbe0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px 16px;
+    margin-bottom: 16px;
+}
+
+.botonContinuar {
+    background-color: rgb(61, 210, 186);
+    border: 2px solid rgb(61, 210, 186);
+    font-family: 'Calibri';
+    font-size: 0.875rem;
+    line-height: 20px;
+    color: rgb(41, 54, 61);
+    padding: 0px 16px;
+    min-height: 32px;
+    align-items: center;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.botonContinuar:disabled,
+.botonContinuar[aria-disabled="true"] {
+    opacity: 0.4;
+}
+
+
+
+.textoNormal {
+    font-size: .875rem;
+    line-height: 20px;
+    color: #29363d;
+    pointer-events: none;
+}
+
+.textoPequenio {
+    font-family: 'Calibri';
+    font-size: .75rem;
+    line-height: 16px;
+    color: #5c7a89;
+}
+
+.opciones {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.opcion {
+    flex: 1;
+    min-width: 120px;
+    max-width: 150px;
+    height: 120px;
+
+    border: 2px solid #2bbbad;
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: #2c3e50;
+    background: #fff;
+}
+
+.opcion span {
+    font-size: 14px;
+    text-align: center;
+}
+
+.opcion:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Activo (como el verde de la imagen) */
+.opcion.activa {
+    background: linear-gradient(135deg, #36d1c4, #2bbbad);
+    color: white;
+    border: none;
+}

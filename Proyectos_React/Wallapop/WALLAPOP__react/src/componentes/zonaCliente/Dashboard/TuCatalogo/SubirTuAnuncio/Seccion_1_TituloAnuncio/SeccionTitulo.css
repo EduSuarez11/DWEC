@@ -1,0 +1,82 @@
+.container-anuncio {
+    margin-left: 100px;
+    margin-right: 100px;
+    min-height: 100vh;
+}
+
+.titulo {
+    font-size: 48px;
+    font-weight: 300;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.card-anuncio {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+}
+
+.subtitulo {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+
+
+
+
+
+.miniTexto {
+    font-family: 'Calibri';
+    font-size: 0.75rem;
+    line-height: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    color: #5c7a89;
+    flex-grow: 1;
+}
+
+
+.contador {
+    display: flex;
+    flex-direction: row;
+    padding-top: 4px;
+}
+
+
+.ejemplo {
+    display: flex;
+    flex-direction: row;
+    padding-top: 4px;
+}
+
+.textInfo {
+    font-family: 'Calibri';
+    font-size: .875rem;
+    line-height: 20px;
+    color: #5c7a89;
+    font-weight: 400;
+    margin: 0;
+}
+
+.titulo-1 {
+    font-family: 'Calibri';
+    font-size: 1.25rem;
+    line-height: 28px;
+    color: #29363d;
+    font-weight: 700;
+    margin: 0;
+}
+
+
+
+.const-input {
+    gap: 8px;
+    pointer-events: none;
+}
+
+
+

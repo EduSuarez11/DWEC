@@ -1,0 +1,14 @@
+.search-box {
+    position: relative;
+    padding-right: 16px;
+    font-family: "WallieFit";
+    font-size: 1rem;
+    line-height: 24px;
+    white-space: nowrap;
+    height: 42px;
+    border: 1px solid #a3b8c1;
+    border-radius: 32px;
+    background: url(https://web-static.wallapop.com/nextjs/_next/static/media/search-icon.9a309a8c.svg) no-repeat scroll;
+    background-position: 16px;
+    padding-left: 48px;
+}

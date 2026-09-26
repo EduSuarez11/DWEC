@@ -1,0 +1,39 @@
+
+.container-input {
+    border-radius: 8px;
+    box-shadow: inset 0px 0px 0px 1px #5c7a89;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 20px 16px 20px 16px;
+    position: relative;
+    min-height: 24px;
+    transition: minh-height 0.25s, padding 0.25s;
+    box-sizing: content-box;
+    text-align: start;
+}
+
+.text-category {
+    font-family: "Calibri";
+    font-size: 1rem;
+    line-height: 24px;
+    width: calc(100% - 32px - 24px);
+    z-index: 1;
+    position: absolute;
+    transition: font-size 0.25s;
+    color: #5c7a89;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.icon-place {
+    position: absolute;
+    right: 16px;
+    top: 2px;
+    bottom: 2px;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    gap: 8px;
+}

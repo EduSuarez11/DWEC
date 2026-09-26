@@ -1,0 +1,22 @@
+.cards {
+    width: 400px;
+    border: 1px solid gray;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.titulo {
+    text-align: left;
+    margin-bottom: 20px;
+}   
+
+#btn-crearCuenta {
+
+    background-color: rgb(112, 246, 212);
+    color: black;
+    border: none;
+    border-radius: 15px;
+    width: 250px;
+} 

@@ -1,0 +1,91 @@
+.divFotos {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.botonImagen {
+    width: 124px;
+    height: 124px;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #a3b8c1;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.titulo-foto {
+    font-family: 'Calibri';
+    font-size: 1.25rem;
+    line-height: 28px;
+    color: #29363d;
+    font-weight: 700;
+    margin: 0;
+}
+
+.botonFotos {
+    background-color: transparent;
+    border: 2px solid rgb(61, 210, 186);
+    font-family: 'Calibri';
+    font-size: 0.875rem;
+    line-height: 20px;
+    color: rgb(41, 54, 61);
+    padding: 0px 16px;
+    min-height: 32px;
+    border-radius: 20px
+}
+
+.imagenPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+.deleteImage {
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 1px 4px #25323814, 0 2px 6px #25323814;
+    border-radius: 100px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    line-height: 20px;
+    position: absolute;
+    right: 8px;
+    text-align: center;
+    top: 8px;
+    z-index: 1;
+}
+
+.foto-principal {
+    font-size: 0.875rem;
+    line-height: 20px;
+    padding: 4px 8px;
+    gap: 4px;
+    border-radius: 16px;
+    box-shadow: rgba(37, 50, 56, 0.08) 0px 1px 4px 0px, rgba(37, 50, 56, 0.08) 0px 2px 6px 0px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(92, 122, 137);
+    font-family: 'Calibri';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.principal {
+    bottom: 10px;
+    left: 16px;
+    position: absolute;
+
+}

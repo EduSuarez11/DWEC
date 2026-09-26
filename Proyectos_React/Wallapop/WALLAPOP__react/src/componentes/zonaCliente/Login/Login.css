@@ -1,0 +1,15 @@
+ .walla-button {
+    border: 2px solid rgb(41, 54, 61);
+    /* background-color: transparent; */
+    min-width: 100%;
+    min-height: 48px;
+    font-size: 1rem;
+    line-height: 24px;
+    color: rgb(41, 54, 61);
+    align-items: center;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    padding: 0px 24px;
+    cursor: pointer;
+ }

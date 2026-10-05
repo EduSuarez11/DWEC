@@ -26,9 +26,15 @@
         por el cual se accede a la ruta (get, post, etc). Estas funciones SI GENERAN RESPUESTA
 
 */
+require('dotenv').config(); // <--- la funcion .config() lee el fichero .env y mete en objeto "process.env" las variables
+                            // definidas como variables de entorno del sistema operativo, para que puedan ser usadas en cualquier
+                            // parte del codigo de nodejs
 
 const express = require("express"); // el modulo express exporta una funcion que asignamos a variable
-const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser"); // <--- el modulo "cookie-parser" exporta una funcion que asignamos a variable "cookieParser"
+const cors = require('cors');
+const mongodb = require('mongodb'); // <--- el modulo "mongodb" exporta un objeto que asignamos a variable "mongodb" que expone props.
+const clienteConexionMongoDB = new mongodb.MongoClient(process.env.MONGODB_URL); // <--- en atlas la cadena conexion varia: mongodb+srv//<usuario>:<password>@<cluster>
 //console.log(`Valor de la variable express ${express}`);
 
 // que al ejecutarla nos devuelve in objeto Application de Express: https://expressjs.com/en/5x/api/application/
@@ -44,20 +50,47 @@ const server = express();
 // });
 
 server.use(express.json()); // <--- 1º funcion middleware, lo que hace es meter en prop. "req.body" del objeto HTTP-REQUEST
-                            // del cliente, los datos del cuerpo de la peticion HTPP si es un JSON alido, para que luego pueda ser
-                            // usado por los demas middlewares.
+// del cliente, los datos del cuerpo de la peticion HTPP si es un JSON alido, para que luego pueda ser
+// usado por los demas middlewares.
 
 server.use(express.urlencoded({ extended: true })) // <--- 2º funcion middleware. extrae las variables del querystring de la URL
-                                                   // crear un objeto JS: {variable_Query: valor, ...} y lo mete en prop. "req.query"
+// crear un objeto JS: {variable_Query: valor, ...} y lo mete en prop. "req.query"
 
 server.use(cookieParser()); // <--- 3º funcion middleware, extrae las cookies de la cabecera Cookies del HTTP-REQUEST del cliente 
-                            // crea un objeto JS: {nombreCookie: valor, ...} y lo mete en prop. "req.cookies"
+// crea un objeto JS: {nombreCookie: valor, ...} y lo mete en prop. "req.cookies"
 
 server.use(cors()) // <--- 4º funcion middleware, habilita CORS.
 
-server.use("/api/Tienda/Categorias", function (req, res, next) {
-    console.log(`Peticion entrante: ${req.method} ${req.url}`);
-    res.status(200).send("Ahora mismo te mando las categorias...");
+server.get("/api/Tienda/Categorias", async function (req, res, next) {
+    try {
+        console.log(`Peticion entrante: ${req.method} ${req.url}`);
+        // 1º paso: conectarme a la BD, usando un cliente de conexion a MongoDB: mongodb <--- driver nativo para nodejs de mongodb
+        await clienteConexionMongoDB.connect();
+
+        // 2º paso: ejecutar la consulta a la BD de MongoDB para recuperar las categorias de productos (en principio solo
+        // quiero las principales o raices, es decir, las que no tienen padre por encima) 
+        // <--- query: db['PcComponentes'].categorias.find({ tipo: '...' }) <=== resultado: array de objetos a devolver al cliente en variable _categorias
+        let _categorias = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+            .collection('categorias')
+            .find({ 
+                pathCat: { $regex: /^\d+$/ }
+            })
+            .toArray();
+        
+        console.log('Categorias recup: ', _categorias);
+
+        // 3º paso: devolver la respuesta al cliente con el resultado de la operacion contra la BD
+        res.status(200).send(
+            {
+                codigo: 0, // <---- codigo de resultado de la operacion contra la bd, si es 0 OK, en caso contrario sera un error
+                mensaje: 'categorias recuperadas correctamente',
+                categorias: _categorias
+            }
+        );
+    } catch (error) {
+        console.log(`Error al recuperar las categorias de la BD: ${error}`);
+        res.status(200).send({ codigo: 1, mensaje: error.message, categorias: [] });
+    }
 });
 
 

@@ -35,6 +35,8 @@ const cookieParser = require("cookie-parser"); // <--- el modulo "cookie-parser"
 const cors = require('cors');
 const mongodb = require('mongodb'); // <--- el modulo "mongodb" exporta un objeto que asignamos a variable "mongodb" que expone props.
 const clienteConexionMongoDB = new mongodb.MongoClient(process.env.MONGODB_URL); // <--- en atlas la cadena conexion varia: mongodb+srv//<usuario>:<password>@<cluster>
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 //console.log(`Valor de la variable express ${express}`);
 
 // que al ejecutarla nos devuelve in objeto Application de Express: https://expressjs.com/en/5x/api/application/
@@ -90,6 +92,36 @@ server.get("/api/Tienda/Categorias", async function (req, res, next) {
     } catch (error) {
         console.log(`Error al recuperar las categorias de la BD: ${error}`);
         res.status(200).send({ codigo: 1, mensaje: error.message, categorias: [] });
+    }
+});
+
+
+server.post('/api/Cliente/Login', async function(req, res, next) {
+    try {
+        // en req.body la funcion middleware express.json() ha metido el objeto {email: '...', password: '...'}
+        // para procesarlo en este endpoint
+        const { email, password } = req.body;
+
+        // 1º paso: conectarme a la bbdd y comprobar si existe un usuario con ese email
+        await clienteConexionMongoDB.connect();
+
+        const usuario = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+                                        .collection('clientes')
+                                        .findOne({"cuenta.email": email})
+
+        if (!clienteExiste) throw new Error("No existe un usuario con ese email")
+        // 2º paso: si existe, comprobar si el hash que tiene almacenado coincide con el hash de la password que me ha enviado
+        // SI NO ---> error de password incorrecta
+        if (!bcrypt.compareSync(password, usuario.cuenta.password)) throw new Error("Contraseña incorrecta");
+
+
+        // 3º paso: crear JWT con los datos del usuario que me interesen preservar en la sesion y
+        // enviarselo al cliente (se podria usar una cookie)
+        const token = jwt.sign({email, _id: usuario._id}, process.env.JWT_SECRET, {expiresIn: '2h'});
+
+        res.status(200).send({codigo: 0, mensaje: "Login ok", token});
+    } catch (error) {
+        res.status(200).send({codigo: 2, mensaje: error.message, token: null});
     }
 });
 

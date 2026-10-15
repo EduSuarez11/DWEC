@@ -79,7 +79,7 @@ server.get("/api/Tienda/Categorias", async function (req, res, next) {
             })
             .toArray();
 
-        console.log('Categorias recup: ', _categorias);
+        //console.log('Categorias recup: ', _categorias);
 
         // 3º paso: devolver la respuesta al cliente con el resultado de la operacion contra la BD
         res.status(200).send(
@@ -119,7 +119,7 @@ server.post('/api/Cliente/Login', async function (req, res, next) {
         // enviarselo al cliente (se podria usar una cookie)
         const token = jwt.sign({ email, _id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
-        res.status(200).send({ codigo: 0, mensaje: "Login ok", token });
+        res.status(200).send({ codigo: 0, mensaje: "Login ok", datos: { cliente: usuario, accessToken: token} });
     } catch (error) {
         res.status(200).send({ codigo: 2, mensaje: error.message, token: null });
     }

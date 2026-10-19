@@ -4,7 +4,7 @@ import { CarritoSlice } from './zustand-slices/CarritoSlice';
 import { SesionSlice } from './zustand-slices/SesionSlice';
 
 const useStore = create(
-    (get, set, store) => {
+    (set, get, store) => {
         //console.log('ejecutando funcion creadora del STORE de ZUSTAND, valor 1º parametro funcion set(): ', store);
         return {
             ...ClienteSlice(set, get, store),

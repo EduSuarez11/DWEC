@@ -80,13 +80,13 @@ function OffCanvasCats() {
                         */
                     }
                     { /* ... pasando categoria por query string en url: /Productos/Categoria?nombreCat=... */}
-                    <div class="list-group">
+                    <div className="list-group">
                         {/* <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Componentes'); setCategoriaSeleccionada("Componentes")}}>Componentes</button>
                         <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Ordenadores'); setCategoriaSeleccionada("Ordenadores")}}>Ordenadores</button>
                         <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Perifericos'); setCategoriaSeleccionada("Perifericos")}}>Perifericos</button>
                         <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Consolas'); setCategoriaSeleccionada("Consolas")}}>Consolas</button> */}
                         {categorias.map((cat, pos) =>
-                            <button key={pos} type="button" class="list-group-item list-group-item-action" onClick={() => {navigate(`/Productos/Categoria?nombreCat=${cat.nombre}`); setCategoriaSeleccionada(cat.nombre)}}>{cat.nombre}</button>
+                            <button key={pos} type="button" className="list-group-item list-group-item-action" onClick={() => {navigate(`/Productos/Categoria?nombreCat=${cat.nombre}`); setCategoriaSeleccionada(cat.nombre)}}>{cat.nombre}</button>
                         )}
                     </div>
                 </div>

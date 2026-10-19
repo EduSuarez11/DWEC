@@ -1,0 +1,17 @@
+.img-avatar {
+    line-height: var(--spacing-03);
+    color: var(--color-white);
+    text-transform: uppercase;
+    background-color: var(--dynamic-background-color, transparent);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border-radius: var(--spacing-03);
+}
+
+.text-account {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 5rem;
+    overflow: hidden;
+}

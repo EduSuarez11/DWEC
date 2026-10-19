@@ -105,21 +105,21 @@ server.post('/api/Cliente/Login', async function (req, res, next) {
         // 1º paso: conectarme a la bbdd y comprobar si existe un usuario con ese email
         await clienteConexionMongoDB.connect();
 
-        const usuario = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+        const usuarioExiste = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
             .collection('clientes')
             .findOne({ "cuenta.email": email })
 
-        if (!clienteExiste) throw new Error("No existe un usuario con ese email")
+        if (!usuarioExiste) throw new Error("No existe un usuario con ese email")
         // 2º paso: si existe, comprobar si el hash que tiene almacenado coincide con el hash de la password que me ha enviado
         // SI NO ---> error de password incorrecta
-        if (!bcrypt.compareSync(password, usuario.cuenta.password)) throw new Error("Contraseña incorrecta");
+        if (!bcrypt.compareSync(password, usuarioExiste.cuenta.password)) throw new Error("Contraseña incorrecta");
 
 
         // 3º paso: crear JWT con los datos del usuario que me interesen preservar en la sesion y
         // enviarselo al cliente (se podria usar una cookie)
-        const token = jwt.sign({ email, _id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+        const token = jwt.sign({ email, _id: usuarioExiste._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
-        res.status(200).send({ codigo: 0, mensaje: "Login ok", datos: { cliente: usuario, accessToken: token} });
+        res.status(200).send({ codigo: 0, mensaje: "Login ok", datos: { cliente: usuarioExiste, accessToken: token} });
     } catch (error) {
         res.status(200).send({ codigo: 2, mensaje: error.message, token: null });
     }
@@ -279,6 +279,79 @@ server.get(
     }
 )
 
+const { google } = require('googleapis');
+const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_OAUTH_CLIENT_ID,
+    process.env.GOOGLE_OAUTH_SECRET_ID,
+    'http://localhost:3000/api/Cliente/LoginGoogleCallback'
+);
+
+// -------------------------------------------- ENDPOINTS para login con Google OAuth --------------------------------------------
+server.get('/api/Cliente/LoginGoogle', async function(req, res, next) {
+    try {
+        // con las creds. de oauth 2.0 obtenidas en la consola de desarrolladores de Google, generamos una url para
+        // que el usuario se autentifique con su cuenta de Google. Instalamos paquete "googleapis" para crear el cliente oauth2.0
+        const url = oauth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope: [ // <--- info que quiero recuperar de la cuenta de google del usuario usando la API habilitada
+                'https://www.googleapis.com/auth/userinfo.email',
+                'https://www.googleapis.com/auth/userinfo.profile',
+                'https://www.googleapis.com/auth/user.phonenumbers.read'
+            ]
+        });
+
+        console.log('Url de Google: ', url);
+        res.status(200).send({codigo: 1, mensaje: 'Login con Google generado', datos: {url}});
+    } catch (error) {
+        console.log('Error en la autentificacion de Google: ', error);
+        res.status(200).send({codigo: 1, mensaje: error.message});
+    }
+})
+
+
+// este endpoint es el q Google llama despues de que el usuario se autentifique en la url que hemos generado paara q introduzca
+// sus credenciales... nos va a pasar por el querystring un codigo de autorizacion para poder cambiarlo por un token de acceso
+// a la API de Google: People-Api y poder recuperar los datos del usuario q se ha autentificado
+server.get('/api/Cliente/LoginGoogleCallback', async function(req, res, next) {
+    try {
+        const { code } = req.query
+
+        const { tokens } = await oauth2Client.getToken(code);
+        console.log('Tokens: ', tokens);
+        
+        // configuro el cliente de oauth2.0 con los tokens
+        oauth2Client.setCredentials(tokens);
+        const peopleApi = google.people({ version: 'v1', auth: oauth2Client });
+
+        const userInfo = await peopleApi.people.get({
+            resourceName: 'people/me',
+            personFields: 'names,emailAddresses,phoneNumbers'
+        });
+        const datosUsuario = {
+            nombre: userInfo.data.names[0].displayName,
+            apellidos: userInfo.data.names[0].familyName,
+            cuenta: {
+                email: userInfo.data.emailAddresses[0].value,
+                password: '',
+                activada: true,
+                telefono: userInfo.data.phoneNumbers ? userInfo.data.phoneNumbers[0].value : '',
+                imagenAvatar: userInfo.data.photos ? userInfo.data.photos[0].url : ''
+            },
+            direcciones: [],
+            favoritos: [],
+            pedidos: [],
+            opiniones: []
+        }
+        // 1º alamcenar datos de google en mongodb, coleccion clientes y que no existe ya en bd.
+        // 2º generar un JWT de sesion para el usuario y devolverselo al cliente de react
+        // 3º genero respuesta con ese token y datos del usuario para q los almacene en el estado global de zustand
+
+        //res.status(200).send({codigo: 0, mensaje: 'Login con Google correcto', datos: {cliente: datosUsuario, token: ''}});
+    } catch (error) {
+        console.log('Error');
+        res.status(200).send({codigo: 2, mensaje: error.message});
+    }
+})
 
 server.listen(
     3000, // puerto de escucha del servidor web, en nodejs suele ser 3000

@@ -46,6 +46,7 @@ function LoginRegistro(){
     async function clickSendDataToServer() {
         //console.log('datos a mandar al server....', { nombreUsuario, email, password, repassword });
         try {
+            console.log('En Login: ', enLogin);
             console.log('datos a mandar al server....', formData);
             const urlEndpoint = `http://localhost:3000/api/Cliente/${enLogin ? 'Login' : 'Registro'}`;
             const petServer = await fetch(urlEndpoint, {
@@ -54,7 +55,7 @@ function LoginRegistro(){
                 body: JSON.stringify(formData)
             })
             const respServer = await petServer.json();
-
+            console.log('Respuesta del servidor node: ' ,respServer);
             if (respServer.codigo !== 0) throw new Error(respServer.mensaje);
 
             // si llegamos aqui es que el login o registro ha sido correcto, guardamos en el store global los datos del cliente y los
@@ -70,7 +71,17 @@ function LoginRegistro(){
         } catch (error) {
             console.log('error al crear la cuenta: ', error);
         }
+    }
 
+    async function handlerGoogleLogin() {
+        try {
+            const urlPopupGoogle = await fetch('http://localhost:3000/api/Cliente/LoginGoogle');
+            const datosPopupGoogle = await urlPopupGoogle.json();
+            console.log('Url de google: ', datosPopupGoogle);
+            window.open(datosPopupGoogle.datos.url, 'popupGoogle', 'width=600, height=600');
+        } catch (error) {
+            console.log('error al hacer login con Google: ', error);
+        }        
     }
 
     return <div className="container">
@@ -90,7 +101,13 @@ function LoginRegistro(){
                 <div className="container">
                     
                     <div className="row"><div className="col"><h4><strong>{ enLogin ? "Iniciar sesión" : "Crear cuenta" }</strong></h4></div></div>
-                    <div className="row m-3"><div className="col d-grid gap-1"><button type="button" id="btnlogingmail"  className="btn btn-light btn-sm" ><img  src="/imagenes/boton_login_GMAIL.png"/></button></div></div>
+                    <div className="row m-3">
+                        <div className="col d-grid gap-1">
+                            <button type="button" id="btnlogingmail"  className="btn btn-light btn-sm" onClick={handlerGoogleLogin}>
+                                <img  src="/imagenes/boton_login_GMAIL.png"/>
+                            </button>
+                        </div>
+                    </div>
                     <div className="row"><div className="col m-4"><h6><span> O bien </span></h6></div></div>
 
                     <div className="row">
@@ -100,11 +117,11 @@ function LoginRegistro(){
                                             .map( campo => (
                                                             <div className="form-floating m-4" key={campo.label}>
                                                                 <input type={campo.type} 
-                                                                        id={`${campo.label}`} 
+                                                                        id={`${campo.id}`} 
                                                                         className="form-control" 
-                                                                        placeholder={campo.label + "*"} 
+                                                                        placeholder={campo.id + "*"} 
                                                                         onChange={ changeInputs }/>
-                                                                <label className="form-label" htmlFor={`input${campo.label}`}>{campo.label}:</label>
+                                                                <label className="form-label" htmlFor={`input${campo.id}`}>{campo.label}:</label>
                                                             </div>
                                                         )
                             )

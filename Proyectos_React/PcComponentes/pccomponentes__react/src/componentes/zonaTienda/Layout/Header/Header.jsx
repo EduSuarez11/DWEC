@@ -2,6 +2,7 @@ import './Header.css'
 import { useNavigate } from 'react-router'
 import OffCanvasCats from './OffCanvasCategorias/OffCanvasCats.jsx'
 import useStore from '../../../../globalState/zustandStateSlices.js';
+import SessionButton from './SessionButton/SessionButton.jsx';
 
 function Header(){
   const saltarAUrl=useNavigate(); //<--- el hook useNavigate() de react-router nos permite saltar a una url si recargar toda la app desde el principio
@@ -49,18 +50,7 @@ function Header(){
                 <div className="d-flex flex-row justify-content-end mt-5 mb-4">
                     <button className="btn btn-outline-secondary btn-sm"><img src="/imagenes/icono_stars.png" alt="icono stars" /> Buscar con IA</button>
 
-                    {
-                      !sesionIniciada ? 
-                      <button className="btn btn-light btn-sm" onClick={ ()=> saltarAUrl('/Cliente/LoginRegistro')} >
-                        <i className="fa-regular fa-user"></i> Mi Cuenta
-                      </button>
-                      :
-                      <button className='btn btn-light btn-sm d-inline-flex align-items-center gap-2'>
-                          <img className='img-avatar rounded-circle' src={datosCliente.cuenta.imagenAvatar} style={{width: '30px', height: '30px'}} />
-                          <span className='text-account'>{datosCliente.nombre}</span>
-                      </button>
-                    }
-                    
+                    <SessionButton saltarAUrl={saltarAUrl} email={datosCliente?.cuenta.email || null} icono={datosCliente?.cuenta.imagenAvatar || null} />
 
                     <button className="btn btn-light btn-sm">
                         <i className="fa-solid fa-cart-shopping position-relative"></i> Mi Cesta
@@ -69,8 +59,6 @@ function Header(){
                 
             </div>
         </div>
-
-        {/* .... fila opcional para mostrar links q ha usado el usuario u ofertas relevantes...paso de hacerlo  */}
     </div>
     )
 }

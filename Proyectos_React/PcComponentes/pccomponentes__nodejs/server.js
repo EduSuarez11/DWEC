@@ -325,7 +325,7 @@ server.get('/api/Cliente/LoginGoogleCallback', async function(req, res, next) {
 
         const userInfo = await peopleApi.people.get({
             resourceName: 'people/me',
-            personFields: 'names,emailAddresses,phoneNumbers'
+            personFields: 'names,emailAddresses,phoneNumbers,photos'
         });
         const datosUsuario = {
             nombre: userInfo.data.names[0].displayName,
@@ -343,13 +343,60 @@ server.get('/api/Cliente/LoginGoogleCallback', async function(req, res, next) {
             opiniones: []
         }
         // 1º alamcenar datos de google en mongodb, coleccion clientes y que no existe ya en bd.
-        // 2º generar un JWT de sesion para el usuario y devolverselo al cliente de react
-        // 3º genero respuesta con ese token y datos del usuario para q los almacene en el estado global de zustand
+        await clienteConexionMongoDB.connect();
+        const usuarioExistente = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+                                .collection('clientes')
+                                .findOne({ 'cuenta.email': datosUsuario.cuenta.email });
 
+        
+        // 2º generar un JWT de sesion para el usuario y devolverselo al cliente de react
+        let tokenJWT;
+        if (usuarioExistente) {
+            tokenJWT = jwt.sign({ email: usuarioExistente.cuenta.email, _id: usuarioExistente._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        } else {
+            const clienteAgregado = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+                                .collection('clientes')
+                               .insertOne(datosUsuario);
+
+            if (!clienteAgregado.insertedId) throw new Error('No se pudo añadir el usuario');
+
+            tokenJWT = jwt.sign({ email: datosUsuario.cuenta.email, _id: clienteAgregado.insertedId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        };
+
+        // 3º genero respuesta con ese token y datos del usuario para q los almacene en el estado global de zustand
+        res.status(200).send(`            
+            <html>
+                <body>
+                    <script>
+                        window.opener.postMessage(
+                        ${JSON.stringify(
+                            {
+                                codigo: 0, 
+                                mensaje: 'Login Google OK', 
+                                datos: { cliente: datosUsuario, token: tokenJWT }
+                            })}, '*')
+                    </script>
+                </body>
+            </html>
+        `);
         //res.status(200).send({codigo: 0, mensaje: 'Login con Google correcto', datos: {cliente: datosUsuario, token: ''}});
     } catch (error) {
-        console.log('Error');
-        res.status(200).send({codigo: 2, mensaje: error.message});
+        console.log('Error en el login con Google: ', error);
+        res.status(200).send(`            
+            <html>
+                <body>
+                    <script>
+                        window.opener.postMessage(
+                        ${JSON.stringify(
+                            {
+                                codigo: 1, 
+                                mensaje: 'Error al iniciar sesión con Google', 
+                                datos: null
+                            })}, '*')
+                    </script>
+                </body>
+            </html>
+        `);
     }
 })
 

@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router'
 import OffCanvasCats from './OffCanvasCategorias/OffCanvasCats.jsx'
 import useStore from '../../../../globalState/zustandStateSlices.js';
 import SessionButton from './SessionButton/SessionButton.jsx';
+import OffCanvasSubcats from './OffCanvasSubcategorias/OffCanvasSubcats.jsx';
+import { useState } from 'react';
 
 function Header(){
   const saltarAUrl=useNavigate(); //<--- el hook useNavigate() de react-router nos permite saltar a una url si recargar toda la app desde el principio
                                   //invoca al modulo de enrutamiento y carga componente asociado a esa url
     //console.log('valor de la variable satarAUrl: ', saltarAUrl)
     const { datosCliente, sesionIniciada } = useStore();
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState();
 
     return (
     <div className="container">
@@ -20,11 +23,16 @@ function Header(){
 
             {/* .... offcanvas con categorias.....*/}
             <div className="col-2">
-                <OffCanvasCats />
+                <OffCanvasCats setCategoriaSeleccionada={setCategoriaSeleccionada} />
             </div>
 
+            <div className="col-1">
+              <OffCanvasSubcats categoriaSeleccionada={categoriaSeleccionada} />
+            </div>
+            
+
             {/* .... caja de busqueda y dropdown de catalogo.....*/}
-            <div className="col-4">
+            <div className="col-3">
               <div className="d-flex flex-row justify-content-between mt-5 mb-4">
 
                 <div className="dropdown">

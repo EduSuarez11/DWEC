@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import './OffCanvas.css'
 import { useNavigate } from 'react-router'
 
-function OffCanvasCats() {
+function OffCanvasCats({ setCategoriaSeleccionada }) {
     const navigate = useNavigate();
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState();
+
     const [categorias, setCategorias] = useState([]);
+    const [subcategorias, setSubcategorias] = useState([]);
 
     /*
          hook useEffect() es una funcion js que adminte como parametros:
@@ -35,7 +36,12 @@ function OffCanvasCats() {
         }
         obtenerCategorias();
     }, [])
-    
+
+
+    function closeCategoriasPanel() {
+
+    }
+
 
     // useEffect(() => {
     //     window.alert('has seleccionado la categoria: ' + categoriaSeleccionada);
@@ -84,14 +90,43 @@ function OffCanvasCats() {
                         {/* <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Componentes'); setCategoriaSeleccionada("Componentes")}}>Componentes</button>
                         <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Ordenadores'); setCategoriaSeleccionada("Ordenadores")}}>Ordenadores</button>
                         <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Perifericos'); setCategoriaSeleccionada("Perifericos")}}>Perifericos</button>
-                        <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Consolas'); setCategoriaSeleccionada("Consolas")}}>Consolas</button> */}
+                        <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Consolas'); setCategoriaSeleccionada("Consolas")}}>Consolas</button> 
+                        navigate(`/Productos/Categoria?nombreCat=${cat.nombre}`)
+                        */}
+
                         {categorias.map((cat, pos) =>
-                            <button key={pos} type="button" className="list-group-item list-group-item-action" onClick={() => {navigate(`/Productos/Categoria?nombreCat=${cat.nombre}`); setCategoriaSeleccionada(cat.nombre)}}>{cat.nombre}</button>
+                            <button key={pos} 
+                                type="button" 
+                                className="list-group-item list-group-item-action"
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasSubcats"
+                                aria-controls="offcanvasSubcatsCont"
+                                onClick={() => setCategoriaSeleccionada(cat)}>
+                                    <img src={cat.icon} className="me-3" style={{width:'25px', height: '25px'}}/>{cat.nombre}
+                            </button>
                         )}
                     </div>
                 </div>
             </div>
         </div>
+
+        // <aside class="category-panel" id="categoryPanel" aria-label="Categorías" aria-hidden="true">
+        //     <div class="panel-header">
+        //         <h2>Categorías</h2>
+        //         <button type="button" className="close-panel"id="closeCategories" aria-label="Cerrar categorías">&times;</button>
+        //     </div>
+
+        //     <div class="panel-content">
+        //         {/* <!-- Sustituye estos botones por tus categorías existentes --> */}
+        //         {categorias.map((cat, pos) =>
+        //             <button key={pos} type="button"
+        //                 className="category-option" data-category={cat.nombre}
+        //                 onClick={() => setCategoriaSeleccionada(cat)}>
+        //                 <img src={cat.icon} className="me-3" style={{ width: '25px', height: '25px' }} />{cat.nombre} ›
+        //             </button>
+        //         )}
+        //     </div>
+        // </aside>
     )
 
 }

@@ -1,27 +1,57 @@
+import { useState, useEffect } from 'react';
 import './ProductosCat.css'
-//import { useParams } from 'react-router' //<---- hook de react-router para interceptar segmentos variables en url
-import { useSearchParams } from 'react-router' //<---- hook de react-router para interceptar valores variables por query string en url
+import { useSearchParams } from 'react-router'
 
-function ProductosCat(){
+function ProductosCat() {
+    const [searchParams] = useSearchParams();
+    const [productos, setProductos] = useState([]);
 
-    //---- hook para interceptar segmentos variables en URL -----------------
-    // const valorDevueltoPorHookUseParams=useParams() //<--- el hook useParams() de react-router nos permite acceder a los parametros de la url
-    // console.log('valorDevueltoPorHookUseParams: ', valorDevueltoPorHookUseParams) //<--- el hook useParams() de react-router nos permite acceder a los parametros de la url
-    //const { nombreCat } = useParams();
+    useEffect(() => {
+        async function obtenerProductos() {
+            const petProductos = await fetch('http://localhost:3000/api/Portal/ProductosByCat');
+            const respJSON = await petProductos.json();
+            console.log('Productos: ', respJSON.productos);
 
-    //---- hook para interceptar valores variables por query string en URL -----------------
-    // const valorDevueltoPorHookUseSearchParams=useSearchParams() //<--- el hook useSearchParams() de react-router nos permite acceder a los parametros de la url
-    // console.log('valorDevueltoPorHookUseSearchParams: ', valorDevueltoPorHookUseSearchParams) //<--- el hook useSearchParams() de react-router nos permite acceder a los parametros de la url
-    const [searchParams, setSearchParams] = useSearchParams() //<--- el hook useSearchParams() de react-router nos permite acceder a los parametros de la url    
-    // console.log('valor de 1º posicion array devuelve hook: ', searchParams);
-    // console.log('valor de 2º posicion array devuelve hook: ', setSearchParams);
+            if (respJSON.codigo !== 0) {
+                alert(respJSON.mensaje);
+            } else {
+                setProductos(respJSON.productos);
+            }
+        }
+        obtenerProductos();
+    }, []);
 
 
     return (
-        <div className="d-flex flex-column justify-content-center align-items-center ">
-            {/* <h3>Pagina de Productos por Categorias se carga dentro del layout cuando en url aparece "/Productos/...."</h3> */}
+        <div className="container py-4">
             <h3>Estas en la Categoria: <strong>{searchParams.get('nombreCat')}</strong></h3>
-            <p> Lista de productos de: <strong>{searchParams.get('nombreCat')}</strong></p> 
+            <p>Lista de productos de: <strong>{searchParams.get('nombreCat')}</strong></p>
+
+            <section class="product-grid">
+                {
+                    productos.length !== 0 ?
+                        productos.map((prod, pos) => 
+                            <article class="product-card" key={pos}>
+                                <div class="product-image-container">
+                                    <img src={prod.imagenes[0]} alt={prod.nombre} class="product-image"/>
+                                </div>
+
+                                <h2 class="product-name small">{prod.nombre}</h2>
+
+                                <div class="product-rating">
+                                    <span class="rating-stars" aria-label="5 estrellas">★★★★★</span>
+                                    <span class="rating-number">{prod.valoracionMedia}</span>
+                                    <span class="product-opinions">({prod.numeroOpiniones})</span>
+                                </div>
+
+                                <p class="product-price">{prod.precio} €</p>
+                                <button type="button" class="compare-button">Comparar</button>
+                            </article>
+                        )
+                        :
+                        <p>No hay productos disponibles</p>
+                }
+            </section>
         </div>
     )
 }

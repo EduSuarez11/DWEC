@@ -65,7 +65,7 @@ server.use(cors()) // <--- 4º funcion middleware, habilita CORS.
 
 server.get("/api/Tienda/Categorias", async function (req, res, next) {
     try {
-        console.log(`Peticion entrante: ${req.method} ${req.url}`);
+        //console.log(`Peticion entrante: ${req.method} ${req.url}`);
         // 1º paso: conectarme a la BD, usando un cliente de conexion a MongoDB: mongodb <--- driver nativo para nodejs de mongodb
         await clienteConexionMongoDB.connect();
 
@@ -92,6 +92,45 @@ server.get("/api/Tienda/Categorias", async function (req, res, next) {
     } catch (error) {
         console.log(`Error al recuperar las categorias de la BD: ${error}`);
         res.status(200).send({ codigo: 1, mensaje: error.message, categorias: [] });
+    }
+});
+
+
+server.get('/api/Cliente/Subcategorias', async function(req, res, next) {
+    try {
+        await clienteConexionMongoDB.connect();
+        let _subcategorias = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+                                .collection('categorias')
+                                .find({
+                                    pathCat: { $regex: /^\d+-\d+$/ }
+                                }).toArray();
+        
+        let _terceracategoria = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+                                .collection('categorias')
+                                .find({
+                                    pathCat: { $regex: /^\d+-\d+-\d+$/ }
+                                }).toArray();
+        if (!_subcategorias) throw new Error('No se pudieron cargar las subcategorias');
+        //console.log('Subcategorias: ', _subcategorias);
+
+        res.status(200).send({ codigo: 0, mensaje: 'Subcategorias obtenidas', datos: { subcategorias: _subcategorias, terceraCategoria: _terceracategoria } });
+    } catch (error) {
+        res.status(200).send({ codigo: 4, mensaje: `Error al cargar las categorias: ${error}`, subcategorias: [] });
+    }
+})
+
+server.get('/api/Portal/ProductosByCat', async function(req, res, next) {
+    try {
+        await clienteConexionMongoDB.connect();
+        const _productos = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+                            .collection('productos')
+                            .find({})
+                            .toArray();    
+
+        console.log('Productos: ', _productos.length);
+        res.status(200).send({codigo: 0, mensaje: 'Productos obtenidos', productos: _productos});
+    } catch (error) {
+        res.status(200).send({codigo: 6, mensaje: `Error al obtener los productos: ${error}`, productos: []});
     }
 });
 

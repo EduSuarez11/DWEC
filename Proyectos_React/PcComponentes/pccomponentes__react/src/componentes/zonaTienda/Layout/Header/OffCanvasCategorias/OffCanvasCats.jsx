@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './OffCanvas.css'
-import { useNavigate } from 'react-router'
+import ListaCategorias from './ListaCategorias/ListaCategorias'
+import PanelSubcategorias from './PanelSubcategorias/PanelSubcategorias'
 
-function OffCanvasCats({ setCategoriaSeleccionada }) {
-    const navigate = useNavigate();
-
-    const [categorias, setCategorias] = useState([]);
-    const [subcategorias, setSubcategorias] = useState([]);
+function OffCanvasCats() {
+    const [categoriaSeleccionada, setCategoriaSeleccionada]=useState(null)
+    const offcanvasRef = useRef(null);
 
     /*
          hook useEffect() es una funcion js que adminte como parametros:
@@ -19,33 +18,21 @@ function OffCanvasCats({ setCategoriaSeleccionada }) {
                 al montar el componente y nunca mas
     */
 
+    // Cuando bootstrap termina de cerrar el offcanvas, cerramos tambien el panel de subcategorias
     useEffect(() => {
-        //console.log("en teoria este efecto se ejecuta una sola vez al montar el componente OffCanvasCats");
-        //console.log(`pq el ARRAY DE DEPENDENCIAS ESTA VACIO [] y no hay variables q al cambiar su valor provoquen la ejecucion del efecto`);
+        const offcanvasElement = offcanvasRef.current;
+        const cerrarPanel = () => setCategoriaSeleccionada(null);
 
-        async function obtenerCategorias() {
-            // Peticion para recibir las categorias por parte del servidor nodejs y mostrarlas
-            const response = await fetch('http://localhost:3000/api/Tienda/Categorias');
-            const respJSON = await response.json();
-            console.log('Respuesta de la peticion: ', respJSON);
-            if (respJSON.codigo === 0) {
-                setCategorias(respJSON.categorias);
-            } else {
-                alert(respJSON.mensaje);
-            }
-        }
-        obtenerCategorias();
-    }, [])
+        offcanvasElement.addEventListener('hidden.bs.offcanvas', cerrarPanel);
+        return () => offcanvasElement.removeEventListener('hidden.bs.offcanvas', cerrarPanel);
+    }, []);
 
 
-    function closeCategoriasPanel() {
-
+    function handleCategoriaSeleccionada(categoria){
+        setCategoriaSeleccionada(categoriaPrevia => (
+            categoriaPrevia?._id === categoria._id ? null : categoria
+        ))
     }
-
-
-    // useEffect(() => {
-    //     window.alert('has seleccionado la categoria: ' + categoriaSeleccionada);
-    // }, [categoriaSeleccionada])
 
 
     return (
@@ -62,7 +49,8 @@ function OffCanvasCats({ setCategoriaSeleccionada }) {
                 data-bs-scroll="true"
                 tabIndex="-1"
                 id="offcanvasWithBothOptions"
-                aria-labelledby="offcanvasWithBothOptionsLabel">
+                aria-labelledby="offcanvasWithBothOptionsLabel"
+                ref={offcanvasRef}>
 
                 <div className="offcanvas-header">
                     <h5 className="offcanvas-title" id="offcanvasWithBothOptionsLabel">Campañas y ofertas</h5>
@@ -72,61 +60,19 @@ function OffCanvasCats({ setCategoriaSeleccionada }) {
 
                 <div className="offcanvas-body">
                     <h3><strong>Categorias</strong></h3>
-                    <p>....cargar categorias principales invocando a servicio....</p>
-                    {
-                        /*
-                            ... pasando categoria por segmento variable en url: /Productos/Categoria/:nombreCat
-                            <div class="list-group">
-                                <button type="button" class="list-group-item list-group-item-action" onClick={ ()=> navigate('/Productos/Categoria/Componentes') }>Componentes</button>
-                                <button type="button" class="list-group-item list-group-item-action" onClick={ ()=> navigate('/Productos/Categoria/Ordenadores') }>Ordenadores</button>
-                                <button type="button" class="list-group-item list-group-item-action" onClick={ ()=> navigate('/Productos/Categoria/Perifericos') }>Perifericos</button>
-                                <button type="button" class="list-group-item list-group-item-action" onClick={ ()=> navigate('/Productos/Categoria/Consolas') }>Consolas</button>
-                            </div>
-
-                        */
-                    }
-                    { /* ... pasando categoria por query string en url: /Productos/Categoria?nombreCat=... */}
-                    <div className="list-group">
-                        {/* <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Componentes'); setCategoriaSeleccionada("Componentes")}}>Componentes</button>
-                        <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Ordenadores'); setCategoriaSeleccionada("Ordenadores")}}>Ordenadores</button>
-                        <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Perifericos'); setCategoriaSeleccionada("Perifericos")}}>Perifericos</button>
-                        <button type="button" class="list-group-item list-group-item-action" onClick={() => {navigate('/Productos/Categoria?nombreCat=Consolas'); setCategoriaSeleccionada("Consolas")}}>Consolas</button> 
-                        navigate(`/Productos/Categoria?nombreCat=${cat.nombre}`)
-                        */}
-
-                        {categorias.map((cat, pos) =>
-                            <button key={pos} 
-                                type="button" 
-                                className="list-group-item list-group-item-action"
-                                data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasSubcats"
-                                aria-controls="offcanvasSubcatsCont"
-                                onClick={() => setCategoriaSeleccionada(cat)}>
-                                    <img src={cat.icon} className="me-3" style={{width:'25px', height: '25px'}}/>{cat.nombre}
-                            </button>
-                        )}
-                    </div>
+                    {/* <p>....cargar categorias principales invocando a servicio....</p> */}
+                    <hr/>
+                    <ListaCategorias pathCat='principales'
+                                onCategoriaSeleccionada={handleCategoriaSeleccionada}
+                                categoriaActiva={categoriaSeleccionada}
+                    />
                 </div>
+
+                <PanelSubcategorias key={categoriaSeleccionada?._id ?? 'sin-categoria'}
+                                categoriaPadre={categoriaSeleccionada}
+                                onClose={() => setCategoriaSeleccionada(null)}/>
             </div>
         </div>
-
-        // <aside class="category-panel" id="categoryPanel" aria-label="Categorías" aria-hidden="true">
-        //     <div class="panel-header">
-        //         <h2>Categorías</h2>
-        //         <button type="button" className="close-panel"id="closeCategories" aria-label="Cerrar categorías">&times;</button>
-        //     </div>
-
-        //     <div class="panel-content">
-        //         {/* <!-- Sustituye estos botones por tus categorías existentes --> */}
-        //         {categorias.map((cat, pos) =>
-        //             <button key={pos} type="button"
-        //                 className="category-option" data-category={cat.nombre}
-        //                 onClick={() => setCategoriaSeleccionada(cat)}>
-        //                 <img src={cat.icon} className="me-3" style={{ width: '25px', height: '25px' }} />{cat.nombre} ›
-        //             </button>
-        //         )}
-        //     </div>
-        // </aside>
     )
 
 }

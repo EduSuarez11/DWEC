@@ -65,17 +65,29 @@ server.use(cors()) // <--- 4º funcion middleware, habilita CORS.
 
 server.get("/api/Tienda/Categorias", async function (req, res, next) {
     try {
+        const { pathCat = 'principales' } = req.query;
+        const pathCatValido = pathCat === 'principales' || /^\d+(?:-\d+)*$/.test(pathCat);
         //console.log(`Peticion entrante: ${req.method} ${req.url}`);
         // 1º paso: conectarme a la BD, usando un cliente de conexion a MongoDB: mongodb <--- driver nativo para nodejs de mongodb
         await clienteConexionMongoDB.connect();
-
         // 2º paso: ejecutar la consulta a la BD de MongoDB para recuperar las categorias de productos (en principio solo
         // quiero las principales o raices, es decir, las que no tienen padre por encima) 
         // <--- query: db['PcComponentes'].categorias.find({ tipo: '...' }) <=== resultado: array de objetos a devolver al cliente en variable _categorias
+
+        if (!pathCatValido) {
+            return res.status(200).send({
+                codigo: 1,
+                mensaje: 'El pathCat no tiene un formato valido',
+                datos: { categorias: [] }
+            });
+        }
+
+        const _queryRegExp = pathCat === 'principales' ? /^\d+$/ : new RegExp(`^${pathCat}-\\d+$`);
+
         let _categorias = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
             .collection('categorias')
             .find({
-                pathCat: { $regex: /^\d+$/ }
+                pathCat: { $regex: _queryRegExp }
             })
             .toArray();
 
@@ -86,7 +98,7 @@ server.get("/api/Tienda/Categorias", async function (req, res, next) {
             {
                 codigo: 0, // <---- codigo de resultado de la operacion contra la bd, si es 0 OK, en caso contrario sera un error
                 mensaje: 'categorias recuperadas correctamente',
-                categorias: _categorias
+                datos: {categorias: _categorias}
             }
         );
     } catch (error) {
@@ -94,30 +106,6 @@ server.get("/api/Tienda/Categorias", async function (req, res, next) {
         res.status(200).send({ codigo: 1, mensaje: error.message, categorias: [] });
     }
 });
-
-
-server.get('/api/Cliente/Subcategorias', async function(req, res, next) {
-    try {
-        await clienteConexionMongoDB.connect();
-        let _subcategorias = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
-                                .collection('categorias')
-                                .find({
-                                    pathCat: { $regex: /^\d+-\d+$/ }
-                                }).toArray();
-        
-        let _terceracategoria = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
-                                .collection('categorias')
-                                .find({
-                                    pathCat: { $regex: /^\d+-\d+-\d+$/ }
-                                }).toArray();
-        if (!_subcategorias) throw new Error('No se pudieron cargar las subcategorias');
-        //console.log('Subcategorias: ', _subcategorias);
-
-        res.status(200).send({ codigo: 0, mensaje: 'Subcategorias obtenidas', datos: { subcategorias: _subcategorias, terceraCategoria: _terceracategoria } });
-    } catch (error) {
-        res.status(200).send({ codigo: 4, mensaje: `Error al cargar las categorias: ${error}`, subcategorias: [] });
-    }
-})
 
 server.get('/api/Portal/ProductosByCat', async function(req, res, next) {
     try {

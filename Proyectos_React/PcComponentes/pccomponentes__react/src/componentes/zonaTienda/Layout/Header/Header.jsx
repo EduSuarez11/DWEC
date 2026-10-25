@@ -23,14 +23,9 @@ function Header(){
 
             {/* .... offcanvas con categorias.....*/}
             <div className="col-2">
-                <OffCanvasCats setCategoriaSeleccionada={setCategoriaSeleccionada} />
-            </div>
-
-            <div className="col-1">
-              <OffCanvasSubcats categoriaSeleccionada={categoriaSeleccionada} />
+                <OffCanvasCats />
             </div>
             
-
             {/* .... caja de busqueda y dropdown de catalogo.....*/}
             <div className="col-3">
               <div className="d-flex flex-row justify-content-between mt-5 mb-4">

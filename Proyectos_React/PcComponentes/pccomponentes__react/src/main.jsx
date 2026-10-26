@@ -9,6 +9,7 @@ import LoginRegistro from './componentes/zonaCliente/registro/LoginRegistro.jsx'
 import Layout from './componentes/zonaTienda/Layout/Layout.jsx'
 import Home from './componentes/zonaTienda/Home/Home.jsx'
 import ProductosCat from './componentes/zonaTienda/Productos/ProductosCat.jsx'
+import DetallesProducto from './componentes/zonaTienda/DetallesProducto/DetallesProducto.jsx'
 //#region ------- configuracion modulo de enrutamiento react:  paquete react-router ------
 
 //1ºpaso: instalar el paquete react-router-dom: npm install react-router --save
@@ -28,7 +29,8 @@ import ProductosCat from './componentes/zonaTienda/Productos/ProductosCat.jsx'
          children:[
           { path:'/', element: <Home/>},
           //{ path:'Productos/Categoria/:nombreCat', element: <ProductosCat/> } //<---- objeto Route con segmento variable para usar: useParams()
-           { path:'Productos/Categoria', element: <ProductosCat/> } //<------------ objeto Route con segmentos fijos y valores variables pasados por queryString para usar: useSearchParams()
+           { path:'Productos', element: <ProductosCat/> }, //<------------ objeto Route con segmentos fijos y valores variables pasados por queryString para usar: useSearchParams()
+           { path: 'Producto/:idProducto', element: <DetallesProducto/> }
          ]
         }, 
       //--- objeto route para la ruta de login y registro de clientes

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import './ProductosCat.css'
 import { useSearchParams } from 'react-router'
+import MiniProducto from '../Productos/MiniProducto/MiniProducto';
 
 function ProductosCat() {
     const [searchParams] = useSearchParams();
     const [productos, setProductos] = useState([]);
+    const pathCat = searchParams.get('pathCat') || '';
 
     useEffect(() => {
         async function obtenerProductos() {
-            const petProductos = await fetch('http://localhost:3000/api/Portal/ProductosByCat');
+            const petProductos = await fetch(`http://localhost:3000/api/Portal/Productos?byPathCat=${pathCat}`);
             const respJSON = await petProductos.json();
             console.log('Productos: ', respJSON.productos);
 
@@ -19,39 +21,28 @@ function ProductosCat() {
             }
         }
         obtenerProductos();
-    }, []);
+    }, [pathCat]);
 
 
     return (
-        <div className="container py-4">
-            <h3>Estas en la Categoria: <strong>{searchParams.get('nombreCat')}</strong></h3>
-            <p>Lista de productos de: <strong>{searchParams.get('nombreCat')}</strong></p>
-
-            <section class="product-grid">
-                {
-                    productos.length !== 0 ?
-                        productos.map((prod, pos) => 
-                            <article class="product-card" key={pos}>
-                                <div class="product-image-container">
-                                    <img src={prod.imagenes[0]} alt={prod.nombre} class="product-image"/>
-                                </div>
-
-                                <h2 class="product-name small">{prod.nombre}</h2>
-
-                                <div class="product-rating">
-                                    <span class="rating-stars" aria-label="5 estrellas">★★★★★</span>
-                                    <span class="rating-number">{prod.valoracionMedia}</span>
-                                    <span class="product-opinions">({prod.numeroOpiniones})</span>
-                                </div>
-
-                                <p class="product-price">{prod.precio} €</p>
-                                <button type="button" class="compare-button">Comparar</button>
-                            </article>
-                        )
-                        :
-                        <p>No hay productos disponibles</p>
-                }
-            </section>
+        <div className="d-flex flex-column justify-content-center align-items-center ">
+            {
+                productos.length === 0 ? (
+                    <div className="text-muted">No hay productos en esta categoría</div>
+                ) : (
+                    <div className="productos-cat-grid">
+                        {
+                            productos.map(
+                                producto => (
+                                    <div key={producto._id} className="producto-cat-item">
+                                        <MiniProducto producto={producto} />
+                                    </div>
+                                )
+                            )
+                        }
+                    </div>
+                )
+            }
         </div>
     )
 }

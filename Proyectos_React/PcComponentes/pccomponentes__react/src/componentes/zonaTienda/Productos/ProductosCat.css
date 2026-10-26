@@ -1,128 +1,19 @@
-.catalog-container {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 30px 24px;
-}
-
-/* 5 productos por fila */
-.product-grid {
+.productos-cat-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    padding: 1rem;
+    box-sizing: border-box;
+    align-items: stretch;
 }
 
-.product-card {
+.producto-cat-item {
+    display: flex;
     min-width: 0;
-    background-color: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 16px;
-    transition: box-shadow 0.2s ease,
-        transform 0.2s ease;
 }
 
-.product-card:hover {
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.09);
-    transform: translateY(-3px);
-}
-
-.product-image-container {
-    height: 190px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 18px;
-}
-
-.product-image {
+.producto-cat-item > * {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.product-name {
-    min-height: 66px;
-    margin-bottom: 12px;
-}
-
-.product-rating {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    font-size: 0.82rem;
-    margin-bottom: 14px;
-}
-
-.rating-stars {
-    color: #f5a623;
-    letter-spacing: 1px;
-}
-
-.rating-number {
-    font-weight: 600;
-}
-
-.product-opinions {
-    color: #6c757d;
-}
-
-.product-price {
-    font-size: 1.45rem;
-    font-weight: 700;
-    margin-bottom: 18px;
-}
-
-.compare-button {
-    width: 100%;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-    color: #343a40;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 0.9rem;
-}
-
-.compare-button:hover {
-    background-color: #f1f3f5;
-}
-
-/* Adaptación responsive */
-@media (max-width: 1200px) {
-    .product-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 992px) {
-    .product-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 768px) {
-    .product-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-    }
-
-    .catalog-container {
-        padding: 20px 12px;
-    }
-
-    .product-card {
-        padding: 12px;
-    }
-
-    .product-image-container {
-        height: 150px;
-    }
-
-    .product-name {
-        font-size: 0.9rem;
-    }
-
-    .product-price {
-        font-size: 1.25rem;
-    }
 }

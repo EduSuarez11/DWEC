@@ -1,14 +1,15 @@
 import './PanelSubcategorias.css'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
-import useCategorias from './PanelSubcategorias.Hook.js'
+//import useCategorias from './PanelSubcategorias.Hook.js'
+import useCategorias from '../../../../../customHooks/Categorias.Hook';
 import DropDownSubcategorias from './DropDownSubcategorias/DropDownSubcategorias.jsx'
 
 
 
 function PanelSubcategorias({ categoriaPadre, onClose }) {
     const navigate = useNavigate();
-    const { categorias, cargando, error } = useCategorias(categoriaPadre?.pathCat)
+    const { categorias: categoriasSecundarias } = useCategorias(categoriaPadre?.pathCat);
     const [subcategoriaAbierta, setSubcategoriaAbierta] = useState(null)
 
     return (
@@ -25,14 +26,12 @@ function PanelSubcategorias({ categoriaPadre, onClose }) {
                     </div>
                     <hr />
                     <div className="panel-subcategorias-body">
-                        {cargando && <p className="text-muted">Cargando subcategorias...</p>}
-                        {error && <p className="text-danger">Error: {error}</p>}
-                        {!cargando && !error && categorias.length === 0 && (
+                        {categoriasSecundarias.length === 0 && (
                             <p className="text-muted">No hay subcategorias</p>
                         )}
-                        {!cargando && !error && categorias.length > 0 && (
+                        {categoriasSecundarias.length > 0 && (
                             <ul className="list-unstyled m-0">
-                                {categorias.map(subcategoria => (
+                                {categoriasSecundarias.map(subcategoria => (
                                     <DropDownSubcategorias
                                         key={subcategoria._id}
                                         subcategoria={subcategoria}
@@ -40,7 +39,7 @@ function PanelSubcategorias({ categoriaPadre, onClose }) {
                                         onClick={
                                             () => {
                                                     setSubcategoriaAbierta(actual => (actual?._id === subcategoria._id ? null : subcategoria));
-                                                    //navigate(`/Productos?pathCat=${subcategoria.pathCat}`);
+                                                    navigate(`/Productos?pathCat=${subcategoria.pathCat}`);
                                             }
                                         }
                                     />

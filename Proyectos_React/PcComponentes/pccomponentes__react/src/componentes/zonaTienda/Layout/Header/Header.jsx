@@ -3,22 +3,20 @@ import { useNavigate } from 'react-router'
 import OffCanvasCats from './OffCanvasCategorias/OffCanvasCats.jsx'
 import useStore from '../../../../globalState/zustandStateSlices.js';
 import SessionButton from './SessionButton/SessionButton.jsx';
-import OffCanvasSubcats from './OffCanvasSubcategorias/OffCanvasSubcats.jsx';
 import { useState } from 'react';
 
 function Header(){
   const saltarAUrl=useNavigate(); //<--- el hook useNavigate() de react-router nos permite saltar a una url si recargar toda la app desde el principio
                                   //invoca al modulo de enrutamiento y carga componente asociado a esa url
     //console.log('valor de la variable satarAUrl: ', saltarAUrl)
-    const { datosCliente, sesionIniciada } = useStore();
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState();
+    const { datosCliente } = useStore();
 
     return (
     <div className="container">
         <div className="row">
             {/* .... logo de la tienda.....*/}
             <div className="col-2">
-                <img src="/imagenes/logo_pccomponentes.png" alt="logo"  className="img-fluid"  style={{ cursor: 'pointer' }}/>
+                <img src="/imagenes/logo_pccomponentes.png" alt="logo"  className="img-fluid"  style={{ cursor: 'pointer' }} onClick={() => saltarAUrl('/')}/>
             </div>
 
             {/* .... offcanvas con categorias.....*/}

@@ -107,15 +107,16 @@ server.get("/api/Tienda/Categorias", async function (req, res, next) {
     }
 });
 
-server.get('/api/Portal/ProductosByCat', async function(req, res, next) {
+server.get('/api/Portal/Productos', async function(req, res, next) {
     try {
+        const { byPathCat } = req.query;
         await clienteConexionMongoDB.connect();
         const _productos = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
                             .collection('productos')
-                            .find({})
-                            .toArray();    
+                            .find({pathCategoria: byPathCat})
+                            .toArray();
 
-        console.log('Productos: ', _productos.length);
+        //console.log('Productos: ', _productos.length);
         res.status(200).send({codigo: 0, mensaje: 'Productos obtenidos', productos: _productos});
     } catch (error) {
         res.status(200).send({codigo: 6, mensaje: `Error al obtener los productos: ${error}`, productos: []});
@@ -426,6 +427,25 @@ server.get('/api/Cliente/LoginGoogleCallback', async function(req, res, next) {
         `);
     }
 })
+const { ObjectId } = require('mongodb')
+server.get('/api/Tienda/ObtenerProducto/:idProducto', async function(req, res, next) {
+    try {
+        const { idProducto } = req.params;
+
+        await clienteConexionMongoDB.connect(process.env.MONGODB_URL);
+
+        const productoObtenido = await clienteConexionMongoDB.db(process.env.MONGODB_DBNAME)
+                                    .collection('productos')
+                                    .findOne({_id: new ObjectId(idProducto)});
+
+        if (!productoObtenido._id) throw new Error('No se pudo obtener el producto')
+        //console.log('Producto: ', productoObtenido);
+        res.status(200).send({codigo: 0, mensaje: 'Producto obtenido correctamente', datos: {producto: productoObtenido}});
+    } catch (error) {
+        console.log('Error al obtener producto: ', error);
+        res.status(200).send({codigo: 6, mensaje: 'Error al obtener producto', datos: null});
+    }
+});
 
 server.listen(
     3000, // puerto de escucha del servidor web, en nodejs suele ser 3000

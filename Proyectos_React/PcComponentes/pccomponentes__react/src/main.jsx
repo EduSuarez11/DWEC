@@ -10,6 +10,8 @@ import Layout from './componentes/zonaTienda/Layout/Layout.jsx'
 import Home from './componentes/zonaTienda/Home/Home.jsx'
 import ProductosCat from './componentes/zonaTienda/Productos/ProductosCat.jsx'
 import DetallesProducto from './componentes/zonaTienda/DetallesProducto/DetallesProducto.jsx'
+import GetProductoLoader from './loaders/GetProducto.Loader.js'
+import { UrlInCacheMiddleware } from './middlewares/UrlInCache.Middleware.js'
 //#region ------- configuracion modulo de enrutamiento react:  paquete react-router ------
 
 //1ºpaso: instalar el paquete react-router-dom: npm install react-router --save
@@ -27,16 +29,15 @@ import DetallesProducto from './componentes/zonaTienda/DetallesProducto/Detalles
       {  
          element: <Layout />,
          children:[
-          { path:'/', element: <Home/>},
-          //{ path:'Productos/Categoria/:nombreCat', element: <ProductosCat/> } //<---- objeto Route con segmento variable para usar: useParams()
-           { path:'Productos', element: <ProductosCat/> }, //<------------ objeto Route con segmentos fijos y valores variables pasados por queryString para usar: useSearchParams()
-           { path: 'Producto/:idProducto', element: <DetallesProducto/> }
+            { path:'/', element: <Home/>},
+            { path:'Productos', element: <ProductosCat/> }, //<------------ objeto Route con segmentos fijos y valores variables pasados por queryString para usar: useSearchParams()
+            { path: 'Producto/:idProducto', element: <DetallesProducto/>, loader: GetProductoLoader, middleware: [ UrlInCacheMiddleware ] }
          ]
-        }, 
+      }, 
       //--- objeto route para la ruta de login y registro de clientes
       { path: '/Cliente/LoginRegistro', element: <LoginRegistro /> },
       //--- objeto route para el dashboard de clientes y rutas hijas para las diferentes secciones del dashboard
-      //{}
+      
     ] //<---- array de objetos Route de react-router
   )
 
